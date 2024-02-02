@@ -21,6 +21,19 @@ if user_number / 10 != nil
   print "X"*(user_number/10)
 end
 user_number = user_number % 10
+
+#Check for necessity of placing "I" before "V"
+if user_number >7
+  print "V"
+  print "I" * (user_number % 7)
+  print "V"
+  user_number = 0
+elsif user_number > 2 && user_number < 5
+  print "I" * (user_number % 7)
+  print "V"
+  user_number = 0
+end
+
 if user_number / 5 != nil
 print "V"*(user_number/5)
 end
