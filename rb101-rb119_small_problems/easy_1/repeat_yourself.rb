@@ -1,8 +1,7 @@
-
-def repeat(string, integer)
-  integer.times {puts string}
+def repeat(word, num)
+  num.times do
+    puts word
+  end
 end
 
-
 repeat('Hello', 3)
-

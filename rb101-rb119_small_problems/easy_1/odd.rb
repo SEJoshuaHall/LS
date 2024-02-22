@@ -1,5 +1,6 @@
-def is_odd?(integer)
-  integer % 2 != 0
+def is_odd?(int)
+  return false if int.abs % 2 == 0
+  return true
 end
 
 puts is_odd?(2)    # => false
