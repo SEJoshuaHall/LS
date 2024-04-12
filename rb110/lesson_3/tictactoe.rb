@@ -1,26 +1,20 @@
-=begin
-Tic Tac Toe
+# Tic Tac Toe
 
-1. Dislay the initial empty 3x3 board.
-2. Ask the user to mark a square.
-3. Computer marks a square.
-4. Display the updated board state.
-5. If winner, display winner.
-6. If board is full, display tie.
-7. If neither winner not board is full, go to #2.
-8. Play again?
-9. If yes, go to #1.
-10. Good bye!
-
-=end
-require 'pry'
+require 'rainbow/refinement'
+using Rainbow
 
 INITIAL_MARKER = ' '
-PLAYER_MARKER = 'X'
-COMPUTER_MARKER = 'O'
-WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
-                [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
-                [[1, 5, 9], [3, 5, 7]]
+PLAYER_MARKER = 'X'.blue
+COMPUTER_MARKER = 'O'.red
+
+WINNING_LINES = [[1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+                [1, 4, 7],
+                [2, 5, 8],
+                [3, 6, 9],
+                [1, 5, 9],
+                [3, 5, 7]]
 
 player_score = 0
 computer_score = 0
@@ -34,18 +28,20 @@ end
 def display_board(brd)
   system 'clear'
   puts "You are #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
+
+  puts " _________________"
+  puts "|1    |2    |3    |"
+  puts "|  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}  |"
+  puts "|     |     |     |"
+  puts "|-----+-----+-----|"
+  puts "|4    |5    |6    |"
+  puts "|  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}  |"
+  puts "|     |     |     |"
+  puts "|-----+-----+-----|"
+  puts "|7    |8    |9    |"
+  puts "|  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  |"
+  puts "|_____|_____|_____|"
   puts ""
-  puts "     |     |     "
-  puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
-  puts "     |     |     "
-  puts "-----+-----+-----"
-  puts "     |     |     "
-  puts "  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}"
-  puts "     |     |     "
-  puts "-----+-----+-----"
-  puts "     |     |     "
-  puts "  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}"
-  puts "     |     |     "
 end
 # rubocop:enable Metrics/AbcSize
 
@@ -82,10 +78,6 @@ def player_places_piece!(brd)
 
   brd[square] = PLAYER_MARKER
 end
-
-=begin
-Note: assignment asks that computer detect 2 in a row for defensive or offensive next move, I made it better with 2 out of 3 in a winning scenario. I also randomized the order of the array in each method so that if there are two or more possible winning scenarios, it does not always choose the first in the original WINNING_LINES array. In real life I would ask first to see if this would be considered an improvement before implementing.
-=end
 
 def computer_defense_move?(brd)
   WINNING_LINES.any? do |line|
