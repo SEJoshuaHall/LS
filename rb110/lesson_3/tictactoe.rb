@@ -1,4 +1,5 @@
 # Tic Tac Toe
+# Note: you will need to install rainbow gem to run this code: 'gem install rainbow'
 
 require 'rainbow/refinement'
 using Rainbow
