@@ -40,7 +40,7 @@ def display_board(brd)
   puts "|-----+-----+-----|"
   puts "|7    |8    |9    |"
   puts "|  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  |"
-  puts "|_____|_____|_____|"
+  puts "|_____|_____|_____|" 
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
