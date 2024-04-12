@@ -1,4 +1,5 @@
 # Tic Tac Toe
+# Note: you will need to install rainbow gem to run this code: 'gem install rainbow'
 
 require 'rainbow/refinement'
 using Rainbow
@@ -18,7 +19,7 @@ WINNING_LINES = [[1, 2, 3],
 
 player_score = 0
 computer_score = 0
-computer_next = 'n' #default, determines if the computer takes the first turn.
+current_player = 'c' #default
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -165,35 +166,44 @@ def detect_winner(brd)
   nil
 end
 
-def set_computer_next(computer_first)
+def set_current_player(select_player)
   puts "Would you like to go first? Enter 'y' or 'n'. Or if you want the computer to choose, enter 'c'."
   user_response = gets.chomp
-  if user_response == 'n'
-    computer_first = 'y'
-  elsif user_response == 'c'
-    computer_first = ['y', 'n'].sample
+  if user_response == 'y'
+    select_player = 'p'
+  elsif user_response == 'n'
+    select_player = 'c'
   else
-    computer_first
+    select_player = ['p', 'c'].sample
+  end
+end
+
+def place_piece!(board, current_player)
+  if current_player == 'c' 
+    computer_places_piece!(board)
+  else
+    player_places_piece!(board)
+  end
+end
+
+def alternate_player(current_player)
+  if current_player == 'c'
+    current_player = 'p'
+  else
+    current_player = 'c'
   end
 end
 
 loop do
   board = initialize_board
 
-  computer_next = set_computer_next(computer_next)
-  p computer_next
+  current_player = set_current_player(current_player)
+  
   loop do
     display_board(board)
-
-    if computer_next == 'y' 
-      computer_places_piece!(board)
-      computer_next = 'n'
-    else
-      player_places_piece!(board)
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
     break if someone_won?(board) || board_full?(board)
-      computer_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
-    end
   end
 
   display_board(board)
