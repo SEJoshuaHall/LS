@@ -4,9 +4,12 @@
 require 'rainbow/refinement'
 using Rainbow
 
+require 'yaml'
+MESSAGES = YAML.load_file('tictactoe_mess.yml')
+
 INITIAL_MARKER = ' '
-PLAYER_MARKER = 'X'.blue
-COMPUTER_MARKER = 'O'.red
+PLAYER_MARKER = 'X'.blue.bright
+COMPUTER_MARKER = 'O'.red.bright
 
 WINNING_LINES = [[1, 2, 3],
                 [4, 5, 6],
@@ -18,30 +21,33 @@ WINNING_LINES = [[1, 2, 3],
                 [3, 5, 7]]
 
 player_score = 0
+player_name = ''
 computer_score = 0
-current_player = 'c' #default
+computer_name = Rainbow('Serious George').red.bright
+whos_first = 'computer' #default for computer
 
 def prompt(msg)
   puts "=> #{msg}"
 end
 
 # rubocop:disable Metrics/AbcSize
-def display_board(brd)
+def display_board(brd, player_name, computer_name)
   system 'clear'
-  puts "You are #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
-
-  puts " _________________"
-  puts "|1    |2    |3    |"
-  puts "|  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}  |"
-  puts "|     |     |     |"
-  puts "|-----+-----+-----|"
-  puts "|4    |5    |6    |"
-  puts "|  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}  |"
-  puts "|     |     |     |"
-  puts "|-----+-----+-----|"
-  puts "|7    |8    |9    |"
-  puts "|  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  |"
-  puts "|_____|_____|_____|" 
+  puts "       " + "Tic Tac Toe".cyan.bright.underline.background(:black)
+  puts "    _________________"
+  puts "   |" + Rainbow('1').black + "    |" + Rainbow('2').black + "    |" + Rainbow('3').black + "    |"
+  puts "   |  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}  |"
+  puts "   |     |     |     |"
+  puts "   |-----+-----+-----|"
+  puts "   |" + Rainbow('4').black + "    |" + Rainbow('5').black + "    |" + Rainbow('6').black + "    |"
+  puts "   |  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}  |"
+  puts "   |     |     |     |"
+  puts "   |-----+-----+-----|"
+  puts "   |" + Rainbow('7').black + "    |" + Rainbow('8').black + "    |" + Rainbow('9').black + "    |"
+  puts "   |  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  |"
+  puts "   |_____|_____|_____|" 
+  puts ""
+  puts "#{player_name} is #{PLAYER_MARKER}. #{computer_name} is #{COMPUTER_MARKER}."
   puts ""
 end
 # rubocop:enable Metrics/AbcSize
@@ -71,7 +77,9 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt "Choose a square: #{joinor(empty_squares(brd))}"
+    prompt(MESSAGES['where_place'])
+    puts ''
+    print ' => '
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
     prompt "Sorry, that's an invalid entry."
@@ -166,47 +174,96 @@ def detect_winner(brd)
   nil
 end
 
-def set_current_player(select_player)
-  puts "Would you like to go first? Enter 'y' or 'n'. Or if you want the computer to choose, enter 'c'."
-  user_response = gets.chomp
-  if user_response == 'y'
-    select_player = 'p'
-  elsif user_response == 'n'
-    select_player = 'c'
-  else
-    select_player = ['p', 'c'].sample
-  end
+def intro(computer_name)
+  system 'clear'
+  puts Rainbow("Welcome to Tic Tac Toe!").cyan.bright.underline
+  puts ''
+  puts "Hi, my name is #{computer_name}, and I challenge you to a 5 game tournament of Tic Tac Toe!"
+  puts "Of course, you may quit after any round. But what's the fun in that?"
+  puts ''
 end
 
-def place_piece!(board, current_player)
-  if current_player == 'c' 
+def set_player_name(player_name)
+  prompt "With whom do I have the pleasure of playing? (Please enter your name followed by the return key):"
+  puts ''
+  print ' => '
+  player_name = gets.chomp
+  puts ''
+  player_name.blue.bright
+end
+
+def set_whos_first(whos_first, player_name, computer_name)
+  system 'clear'
+  puts Rainbow("Welcome to Tic Tac Toe!").cyan.bright.underline
+  puts ''
+  puts "Hello, #{player_name}!"
+  puts ''
+  prompt "Would you like to go first? Enter 'y' or 'n' and the return key."
+  prompt "Or if you want me to choose, enter 'c' and the return key."
+  puts ''
+  print ' => '
+  user_response = gets.chomp
+
+  system 'clear'
+  puts Rainbow("Welcome to Tic Tac Toe!").cyan.bright.underline
+
+  if user_response == 'y'
+    whos_first = 'player'
+    puts ''
+    puts "#{player_name} will go first."
+  elsif user_response == 'n'
+    whos_first = 'computer'
+    puts ''
+    puts "#{computer_name} will go first."
+  else
+    whos_first = ['player', 'computer'].sample
+    if whos_first == 'player'
+      puts ''
+      puts Rainbow("#{player_name} will go first.").blue.bright
+    else
+      puts ''
+      puts "#{computer_name} will go first."
+    end
+  end
+  sleep(3)
+  whos_first
+end
+
+def place_piece!(board, whos_first, computer_name)
+  if whos_first == 'computer'
+    puts "#{computer_name} is thinking..."
+    sleep(rand(2..4))
     computer_places_piece!(board)
   else
     player_places_piece!(board)
   end
 end
 
-def alternate_player(current_player)
-  if current_player == 'c'
-    current_player = 'p'
+def alternate_player(whos_first)
+  if whos_first == 'computer'
+    whos_first = 'player'
   else
-    current_player = 'c'
+    whos_first = 'computer'
   end
 end
 
 loop do
   board = initialize_board
 
-  current_player = set_current_player(current_player)
-  
+  intro(computer_name)
+
+  player_name = set_player_name(player_name)
+
+  whos_first = set_whos_first(whos_first, player_name, computer_name)
+
   loop do
-    display_board(board)
-    place_piece!(board, current_player)
-    current_player = alternate_player(current_player)
+    display_board(board, player_name, computer_name)
+    place_piece!(board, whos_first, computer_name)
+    whos_first = alternate_player(whos_first)
     break if someone_won?(board) || board_full?(board)
   end
 
-  display_board(board)
+  display_board(board, player_name)
 
   if someone_won?(board)
     prompt "#{detect_winner(board)} won!"
@@ -219,19 +276,20 @@ loop do
     prompt "It's a tie!"
   end
 
-  prompt "Score: Computer #{computer_score}, Player #{player_score}!"
-  
+  prompt "Score: #{computer_name} #{computer_score}, Player #{player_score}!"
   if computer_score == 5
-    puts "Computer won!"
+    puts "#{computer_name} won!"
   elsif player_score == 5
     puts "Player won!"
   end
   break if computer_score == 5 || player_score == 5
   
   prompt "Play again? (y or n)"
+  puts ''
+  print ' => '
   answer = gets.chomp
   
   break unless answer.downcase.start_with?('y')
 end
 
-prompt "Thanks for playing!"
+prompt "Thanks for playing! I can't wait to play you again next time! -#{computer_name}"
