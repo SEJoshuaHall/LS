@@ -77,12 +77,12 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt(MESSAGES['where_place'])
+    prompt(MESSAGES['where_place'] + "#{joinor(empty_squares(brd))}." + MESSAGES['where_place_2'])
     puts ''
     print ' => '
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
-    prompt "Sorry, that's an invalid entry."
+    prompt(MESSAGES['invalid'])
   end
 
   brd[square] = PLAYER_MARKER
@@ -176,15 +176,15 @@ end
 
 def intro(computer_name)
   system 'clear'
-  puts Rainbow("Welcome to Tic Tac Toe!").cyan.bright.underline
+  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
-  puts "Hi, my name is #{computer_name}, and I challenge you to a 5 game tournament of Tic Tac Toe!"
-  puts "Of course, you may quit after any round. But what's the fun in that?"
+  puts (MESSAGES['comp_intro_1']) + "#{computer_name}" + (MESSAGES['comp_intro_2'])
+  puts (MESSAGES['comp_intro_3'])
   puts ''
 end
 
 def set_player_name(player_name)
-  prompt "With whom do I have the pleasure of playing? (Please enter your name followed by the return key):"
+  prompt(MESSAGES['name_prompt'])
   puts ''
   print ' => '
   player_name = gets.chomp
@@ -194,35 +194,35 @@ end
 
 def set_whos_first(whos_first, player_name, computer_name)
   system 'clear'
-  puts Rainbow("Welcome to Tic Tac Toe!").cyan.bright.underline
+  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
   puts "Hello, #{player_name}!"
   puts ''
-  prompt "Would you like to go first? Enter 'y' or 'n' and the return key."
-  prompt "Or if you want me to choose, enter 'c' and the return key."
+  prompt(MESSAGES['go_first_1'])
+  prompt(MESSAGES['go_first_2'])
   puts ''
   print ' => '
   user_response = gets.chomp
 
   system 'clear'
-  puts Rainbow("Welcome to Tic Tac Toe!").cyan.bright.underline
+  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
 
   if user_response == 'y'
     whos_first = 'player'
     puts ''
-    puts "#{player_name} will go first."
+    puts "#{player_name}" + (MESSAGES['announce_who_first'])
   elsif user_response == 'n'
     whos_first = 'computer'
     puts ''
-    puts "#{computer_name} will go first."
+    puts "#{computer_name}" + (MESSAGES['announce_who_first'])
   else
     whos_first = ['player', 'computer'].sample
     if whos_first == 'player'
       puts ''
-      puts Rainbow("#{player_name} will go first.").blue.bright
+      puts Rainbow("#{player_name}" + (MESSAGES['announce_who_first'])).blue.bright
     else
       puts ''
-      puts "#{computer_name} will go first."
+      puts "#{computer_name}" + (MESSAGES['announce_who_first'])
     end
   end
   sleep(3)
@@ -231,7 +231,7 @@ end
 
 def place_piece!(board, whos_first, computer_name)
   if whos_first == 'computer'
-    puts "#{computer_name} is thinking..."
+    puts "#{computer_name} " + (MESSAGES['thinking'])
     sleep(rand(2..4))
     computer_places_piece!(board)
   else
@@ -248,48 +248,65 @@ def alternate_player(whos_first)
 end
 
 loop do
-  board = initialize_board
-
   intro(computer_name)
 
   player_name = set_player_name(player_name)
 
-  whos_first = set_whos_first(whos_first, player_name, computer_name)
+  counter = 0
 
   loop do
-    display_board(board, player_name, computer_name)
-    place_piece!(board, whos_first, computer_name)
-    whos_first = alternate_player(whos_first)
-    break if someone_won?(board) || board_full?(board)
-  end
+    board = initialize_board
 
-  display_board(board, player_name)
+    whos_first = set_whos_first(whos_first, player_name, computer_name) if counter == 0
+    
+    counter += 1
 
-  if someone_won?(board)
-    prompt "#{detect_winner(board)} won!"
-    if detect_winner(board) == 'Player'
-      player_score += 1
-    elsif detect_winner(board) == 'Computer'
-      computer_score += 1
+    loop do
+      display_board(board, player_name, computer_name)
+      place_piece!(board, whos_first, computer_name)
+      whos_first = alternate_player(whos_first)
+      break if someone_won?(board) || board_full?(board)
     end
-  else
-    prompt "It's a tie!"
+
+    display_board(board, player_name, computer_name)
+
+    if someone_won?(board)
+      prompt "#{detect_winner(board)}" + (MESSAGES['won'])
+      if detect_winner(board) == 'Player'
+        player_score += 1
+      elsif detect_winner(board) == 'Computer'
+        computer_score += 1
+      end
+    else
+      prompt(MESSAGES['tie'])
+    end
+
+    prompt (MESSAGES['score_update_1']) + "#{computer_name} #{computer_score}" + (MESSAGES['score_update_2']) + "#{player_score}" + (MESSAGES['score_update_3'])
+    if computer_score == 5
+      puts "#{computer_name}" + (MESSAGES['won'])
+    elsif player_score == 5
+      puts (MESSAGES['player_won'])
+    end
+    break if computer_score == 5 || player_score == 5
+    
+    prompt(MESSAGES['play_again'])
+    puts ''
+    print ' => '
+    answer = gets.chomp
+    
+    break unless answer.downcase.start_with?('y')
+
   end
 
-  prompt "Score: #{computer_name} #{computer_score}, Player #{player_score}!"
-  if computer_score == 5
-    puts "#{computer_name} won!"
-  elsif player_score == 5
-    puts "Player won!"
-  end
-  break if computer_score == 5 || player_score == 5
-  
-  prompt "Play again? (y or n)"
+  prompt(MESSAGES['new_tournament'])
   puts ''
   print ' => '
   answer = gets.chomp
   
   break unless answer.downcase.start_with?('y')
+
 end
 
-prompt "Thanks for playing! I can't wait to play you again next time! -#{computer_name}"
+system 'clear'
+display_board(board, player_name, computer_name)
+puts MESSAGES['thanks'] + "#{computer_name}"
