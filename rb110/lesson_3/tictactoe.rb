@@ -413,14 +413,6 @@ loop do
   horizontal_starting_nums(board_width)
   winning_lines = winning_lines(winning_lines, board_width, board_spaces)
 
-  # p board_width = get_board_width(board_width)
-  # p board_num_spaces = board_num_spaces(board_width)
-  # p board_spaces = board_arr_spaces(board_num_spaces)
-  # p num_spaces = board_num_spaces(board_width)
-  # p arr_spaces = board_arr_spaces(num_spaces)
-  # p horizontal_starting_nums(board_width)
-  # p winning_lines = winning_lines(winning_lines, board_width, board_spaces)
-
   counter = 0
 
   loop do
