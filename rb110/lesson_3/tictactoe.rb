@@ -7,35 +7,144 @@ using Rainbow
 require 'yaml'
 MESSAGES = YAML.load_file('tictactoe_mess.yml')
 
+#INITIALIZING VARIABLES
+
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'.blue.bright
 COMPUTER_MARKER = 'O'.red.bright
 
-WINNING_LINES = [[1, 2, 3],
-                [4, 5, 6],
-                [7, 8, 9],
-                [1, 4, 7],
-                [2, 5, 8],
-                [3, 6, 9],
-                [1, 5, 9],
-                [3, 5, 7]]
+num_spaces = 0
+arr_spaces = []
+horizontal_starting_nums = []
+board_num_spaces = 0
+board = {}
+board_width = 0
+
+winning_lines = []
+winning_diagonal = []
+winning_reverse_diagonal = []
+winning_verticle = []
+winning_horizontal = []
+
+player_name = ''
+computer_name = Rainbow('Serious George').red.bright
 
 player_score = 0
-player_name = ''
 computer_score = 0
-computer_name = Rainbow('Serious George').red.bright
-whos_first = 'computer' #default
-board = {}
-board_size = 3 #default
+
+whos_first = ''
 play_again = ''
+
+#DEFINING METHODS
 
 def prompt(msg)
   puts "=> #{msg}"
 end
 
+# methods for configuring board size and setup
+
+def get_board_width(board_width)
+  size = 1
+  loop do
+    prompt(MESSAGES['request_board_width'])
+    puts ''
+    print ' => '
+    size = gets.chomp.to_i
+    if size.between?(3, 9)
+      break
+    else
+      puts ''
+      puts MESSAGES['invalid']
+      puts ''
+    end
+  end
+  board_width = size
+end
+
+def board_num_spaces(board_width)
+  board_width * board_width
+end
+
+def board_arr_spaces(board_num_spaces)
+  arr = []
+  (1..board_num_spaces).each do |num|
+    arr << num
+  end
+  arr
+end
+
+def winning_lines(winning_lines, board_width, board_spaces)
+  winning_lines << winning_diagonal(board_width, board_spaces)
+  winning_lines << winning_reverse_diagonal(board_width, board_spaces)
+  winning_lines = winning_lines + winning_verticle(board_width, board_spaces)
+  winning_lines = winning_lines + winning_horizontal(board_width, board_spaces)
+  winning_lines
+end
+
+def winning_diagonal(board_width, board_arr_spaces)
+  arr = [1]
+  counter = 1
+  loop do
+    arr << board_width * counter + counter + 1
+    counter += 1
+    break if counter == board_width
+  end
+  arr
+end
+
+def winning_reverse_diagonal(board_width, board_arr_spaces)
+  arr = []
+  counter = 1
+  loop do
+    arr << board_width * counter - counter + 1
+    counter += 1
+    break if counter == board_width + 1
+  end
+  arr
+end
+
+def winning_verticle(board_width, board_arr_spaces)
+  arr = []
+  board_width_arr = (1..board_width).to_a
+  arr = board_width_arr.map do |element|
+    sub_arr = []
+    board_width.times do
+      sub_arr << element 
+      element += board_width
+    end
+    sub_arr
+  end
+  arr
+end
+
+def horizontal_starting_nums(board_width)
+  horizontal_num = 1
+  horizontal_start_num_arr = []
+  loop do
+    horizontal_start_num_arr << horizontal_num
+    horizontal_num += board_width
+    break if horizontal_num > board_width * board_width
+  end
+  horizontal_start_num_arr
+end
+
+def winning_horizontal(board_width, board_arr_spaces)
+  arr = []
+  horizontal_start_num_arr = horizontal_starting_nums(board_width)
+  arr = horizontal_start_num_arr.map do |element|
+    sub_arr = []
+    board_width.times do
+    sub_arr << element
+    element += 1
+    end
+    sub_arr
+  end
+  arr
+end
+
 # rubocop:disable Metrics/AbcSize
 def display_board(brd, player_name, computer_name)
-  system 'clear'
+  # system 'clear'
   puts "       " + "Tic Tac Toe".cyan.bright.underline.background(:black)
   puts "    _________________"
   puts "   |" + Rainbow('1').black + "    |" + Rainbow('2').black + "    |" + Rainbow('3').black + "    |"
@@ -91,22 +200,22 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def computer_defense_move?(brd)
-  WINNING_LINES.any? do |line|
+def computer_defense_move?(brd, winning_lines)
+  winning_lines.any? do |line|
     brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 end
 
-def computer_offense_move?(brd)
-  WINNING_LINES.any? do |line|
+def computer_offense_move?(brd, winning_lines)
+  winning_lines.any? do |line|
     brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 end
 
-def computer_places_defense!(brd)
-  matches = WINNING_LINES.select do |line|
+def computer_places_defense!(brd, winning_lines)
+  matches = winning_lines.select do |line|
     brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
@@ -122,8 +231,8 @@ def computer_places_defense!(brd)
   brd
 end
 
-def computer_places_offense!(brd)
-  matches = WINNING_LINES.select do |line|
+def computer_places_offense!(brd, winning_lines)
+  matches = winning_lines.select do |line|
   brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
   brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
@@ -146,11 +255,11 @@ def computer_places_random!(brd)
 end
 
 
-def computer_places_piece!(brd)
-  if computer_offense_move?(brd)
-    computer_places_offense!(brd)
-  elsif computer_defense_move?(brd)
-    computer_places_defense!(brd)
+def computer_places_piece!(brd, winning_lines)
+  if computer_offense_move?(brd, winning_lines)
+    computer_places_offense!(brd, winning_lines)
+  elsif computer_defense_move?(brd, winning_lines)
+    computer_places_defense!(brd, winning_lines)
   elsif brd[5] == ' '
     brd[5] = COMPUTER_MARKER
   else
@@ -162,12 +271,12 @@ def board_full?(brd)
   empty_squares(brd).empty?
 end
 
-def someone_won?(brd)
-  !!detect_winner(brd)
+def someone_won?(brd, winning_lines)
+  !!detect_winner(brd, winning_lines)
 end
 
-def detect_winner(brd)
-  WINNING_LINES.each do |line|
+def detect_winner(brd, winning_lines)
+  winning_lines.each do |line|
     if brd.values_at(*line).count(PLAYER_MARKER) == 3
       return 'Player'
     elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
@@ -177,15 +286,15 @@ def detect_winner(brd)
   nil
 end
 
-def intro(computer_name, board_size)
-  system 'clear'
+def intro(computer_name, board_width)
+  # system 'clear'
   puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
   sleep(1)
   puts (MESSAGES['comp_intro_1']) + "#{computer_name}" + (MESSAGES['comp_intro_2'])
   puts ''
   sleep(2)
-  puts (MESSAGES['rules_1']) + "#{board_size}" + (MESSAGES['rules_2'])
+  puts (MESSAGES['rules'])
   puts ''
   sleep(3)
 end
@@ -200,7 +309,7 @@ def set_player_name(player_name)
 end
 
 def welcome(player_name)
-  system 'clear'
+  # system 'clear'
   puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
   sleep(1)
@@ -211,6 +320,7 @@ end
 
 def get_whos_first(whos_first)
   loop do
+    puts ''
     prompt(MESSAGES['go_first_1'])
     sleep(1)
     prompt(MESSAGES['go_first_2'])
@@ -239,7 +349,7 @@ def get_whos_first(whos_first)
 end
 
 def declare_whos_first(whos_first, player_name, computer_name)
-  system 'clear'
+  # system 'clear'
   puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
 
@@ -252,11 +362,11 @@ def declare_whos_first(whos_first, player_name, computer_name)
   sleep(3)
 end
 
-def place_piece!(board, whos_first, computer_name)
+def place_piece!(board, whos_first, computer_name, winning_lines)
   if whos_first == 'computer'
     puts "#{computer_name} " + (MESSAGES['thinking'])
     sleep(rand(2..4))
-    computer_places_piece!(board)
+    computer_places_piece!(board, winning_lines)
   else
     player_places_piece!(board)
   end
@@ -271,30 +381,53 @@ def alternate_player(whos_first)
 end
 
 def play_again(play_again)
+  answer = ''
   loop do
     prompt(MESSAGES['play_again'])
     puts ''
     print ' => '
     answer = gets.chomp.downcase.chars.first
-    if answer == 'y' || 'n'
+    if answer == 'y' || answer == 'n'
       break
     else
       puts MESSAGES['invalid']
     end
   end
+  answer
 end
 
+# LOGIC OF PROGRAM
+
 loop do
-  intro(computer_name, board_size)
+  intro(computer_name, board_width)
 
   player_name = set_player_name(player_name)
+
+  welcome(player_name)
+
+  board_width = get_board_width(board_width)
+  board_num_spaces = board_num_spaces(board_width)
+  board_spaces = board_arr_spaces(board_num_spaces)
+  num_spaces = board_num_spaces(board_width)
+  arr_spaces = board_arr_spaces(num_spaces)
+  horizontal_starting_nums(board_width)
+  winning_lines = winning_lines(winning_lines, board_width, board_spaces)
+
+  # p board_width = get_board_width(board_width)
+  # p board_num_spaces = board_num_spaces(board_width)
+  # p board_spaces = board_arr_spaces(board_num_spaces)
+  # p num_spaces = board_num_spaces(board_width)
+  # p arr_spaces = board_arr_spaces(num_spaces)
+  # p horizontal_starting_nums(board_width)
+  # p winning_lines = winning_lines(winning_lines, board_width, board_spaces)
 
   counter = 0
 
   loop do
     board = initialize_board
 
-    welcome(player_name)
+    # system 'clear'
+    puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
 
     whos_first = get_whos_first(whos_first) if counter == 0
 
@@ -304,18 +437,18 @@ loop do
 
     loop do
       display_board(board, player_name, computer_name)
-      place_piece!(board, whos_first, computer_name)
+      place_piece!(board, whos_first, computer_name, winning_lines)
       whos_first = alternate_player(whos_first)
-      break if someone_won?(board) || board_full?(board)
+      break if someone_won?(board, winning_lines) || board_full?(board)
     end
 
     display_board(board, player_name, computer_name)
 
-    if someone_won?(board)
-      prompt "#{detect_winner(board)}" + (MESSAGES['won'])
-      if detect_winner(board) == 'Player'
+    if someone_won?(board, winning_lines)
+      prompt "#{detect_winner(board, winning_lines)}" + (MESSAGES['won'])
+      if detect_winner(board, winning_lines) == 'Player'
         player_score += 1
-      elsif detect_winner(board) == 'Computer'
+      elsif detect_winner(board, winning_lines) == 'Computer'
         computer_score += 1
       end
     else
@@ -341,6 +474,6 @@ loop do
 
 end
 
-system 'clear'
+# system 'clear'
 display_board(board, player_name, computer_name)
 puts MESSAGES['thanks'] + "#{computer_name}"
