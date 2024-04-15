@@ -24,7 +24,10 @@ player_score = 0
 player_name = ''
 computer_score = 0
 computer_name = Rainbow('Serious George').red.bright
-whos_first = 'computer' #default for computer
+whos_first = 'computer' #default
+board = {}
+board_size = 3 #default
+play_again = ''
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -174,13 +177,17 @@ def detect_winner(brd)
   nil
 end
 
-def intro(computer_name)
+def intro(computer_name, board_size)
   system 'clear'
   puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
+  sleep(1)
   puts (MESSAGES['comp_intro_1']) + "#{computer_name}" + (MESSAGES['comp_intro_2'])
-  puts (MESSAGES['comp_intro_3'])
   puts ''
+  sleep(2)
+  puts (MESSAGES['rules_1']) + "#{board_size}" + (MESSAGES['rules_2'])
+  puts ''
+  sleep(3)
 end
 
 def set_player_name(player_name)
@@ -192,41 +199,57 @@ def set_player_name(player_name)
   player_name.blue.bright
 end
 
-def set_whos_first(whos_first, player_name, computer_name)
+def welcome(player_name)
   system 'clear'
   puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
   puts ''
-  puts "Hello, #{player_name}!"
+  sleep(1)
+  puts MESSAGES['hello'] + "#{player_name}!"
   puts ''
-  prompt(MESSAGES['go_first_1'])
-  prompt(MESSAGES['go_first_2'])
-  puts ''
-  print ' => '
-  user_response = gets.chomp
+  sleep(1)
+end
 
-  system 'clear'
-  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
-
-  if user_response == 'y'
-    whos_first = 'player'
+def get_whos_first(whos_first)
+  loop do
+    prompt(MESSAGES['go_first_1'])
+    sleep(1)
+    prompt(MESSAGES['go_first_2'])
+    sleep(1)
+    prompt(MESSAGES['go_first_3'])
     puts ''
-    puts "#{player_name}" + (MESSAGES['announce_who_first'])
-  elsif user_response == 'n'
-    whos_first = 'computer'
-    puts ''
-    puts "#{computer_name}" + (MESSAGES['announce_who_first'])
-  else
-    whos_first = ['player', 'computer'].sample
-    if whos_first == 'player'
-      puts ''
-      puts Rainbow("#{player_name}" + (MESSAGES['announce_who_first'])).blue.bright
+    print ' => '
+    user_response = gets.chomp
+    case user_response.chars.first.downcase
+    when 'y'
+      whos_first = 'player'
+      break
+    when 'n'
+      whos_first = 'computer'
+      break
+    when 'c'
+      whos_first = ['player', 'computer'].sample
+      break
     else
       puts ''
-      puts "#{computer_name}" + (MESSAGES['announce_who_first'])
+      prompt(MESSAGES['invalid'])
+      puts ''
     end
   end
-  sleep(3)
   whos_first
+end
+
+def declare_whos_first(whos_first, player_name, computer_name)
+  system 'clear'
+  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
+  puts ''
+
+  if whos_first == 'player'
+    puts "#{player_name}" + (MESSAGES['announce_who_first'])
+  else
+    puts "#{computer_name}" + (MESSAGES['announce_who_first'])
+  end
+
+  sleep(3)
 end
 
 def place_piece!(board, whos_first, computer_name)
@@ -247,8 +270,22 @@ def alternate_player(whos_first)
   end
 end
 
+def play_again(play_again)
+  loop do
+    prompt(MESSAGES['play_again'])
+    puts ''
+    print ' => '
+    answer = gets.chomp.downcase.chars.first
+    if answer == 'y' || 'n'
+      break
+    else
+      puts MESSAGES['invalid']
+    end
+  end
+end
+
 loop do
-  intro(computer_name)
+  intro(computer_name, board_size)
 
   player_name = set_player_name(player_name)
 
@@ -257,8 +294,12 @@ loop do
   loop do
     board = initialize_board
 
-    whos_first = set_whos_first(whos_first, player_name, computer_name) if counter == 0
-    
+    welcome(player_name)
+
+    whos_first = get_whos_first(whos_first) if counter == 0
+
+    declare_whos_first(whos_first, player_name, computer_name)
+
     counter += 1
 
     loop do
@@ -281,29 +322,22 @@ loop do
       prompt(MESSAGES['tie'])
     end
 
-    prompt (MESSAGES['score_update_1']) + "#{computer_name} #{computer_score}" + (MESSAGES['score_update_2']) + "#{player_score}" + (MESSAGES['score_update_3'])
+    prompt (MESSAGES['score_update_1']) + "#{computer_name} #{computer_score}" + (MESSAGES['score_update_2']) + "#{player_name} " "#{player_score}" + (MESSAGES['score_update_3'])
+
     if computer_score == 5
       puts "#{computer_name}" + (MESSAGES['won'])
     elsif player_score == 5
-      puts (MESSAGES['player_won'])
+      puts "#{player_name}" + (MESSAGES['won'])
     end
     break if computer_score == 5 || player_score == 5
     
-    prompt(MESSAGES['play_again'])
-    puts ''
-    print ' => '
-    answer = gets.chomp
+    play_again = play_again(play_again)
     
-    break unless answer.downcase.start_with?('y')
+    break unless play_again == 'y'
 
   end
-
-  prompt(MESSAGES['new_tournament'])
-  puts ''
-  print ' => '
-  answer = gets.chomp
   
-  break unless answer.downcase.start_with?('y')
+  break unless play_again == 'y'
 
 end
 

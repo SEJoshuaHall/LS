@@ -1,12 +1,9 @@
-def fix(value)
-  value.upcase!
-  value.concat('!')
-  value
+
+def play_again(play_again)
+  puts "Play again? (y or n)"
+    puts ''
+    print ' => '
+    answer = gets.chomp.downcase.chars.first
 end
-
-s = 'hello'
-t = fix(s)
-
-p t
-p s
-
+play_again = ''
+p play_again(play_again)
