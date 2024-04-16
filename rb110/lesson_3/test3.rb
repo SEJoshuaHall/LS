@@ -1,18 +1,15 @@
-def get_board_width(board_width)
-  size = 1
-  loop do
-    puts 'enter board size'
-    puts ''
-    size = gets.chomp.to_i
-    if size.between?(3, 9)
-      break
-    else
-      puts ''
-      puts MESSAGES['invalid']
-      puts ''
-    end
-  end
-  board_width = size
+def deep_clone(arr)
+  arr.map { |el| el.is_a?(Array) ? deep_clone(el) : el }
 end
 
-p get_board_width(1)
+arr = ['a', 'b', 'c', 'd']
+arr2 = deep_clone(arr)
+
+p arr
+p arr2
+arr[0] = 'e'
+p arr
+p arr2
+arr2[1] = 'f'
+p arr
+p arr2
