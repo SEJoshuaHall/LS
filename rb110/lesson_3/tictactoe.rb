@@ -26,6 +26,7 @@ COMPUTER_MARKER = 'O'.red.bright
 
 # winning_lines = [[1, 5, 9], [3, 5, 7], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
+how_many_games = 1
 num_spaces = 0
 arr_spaces = []
 horizontal_starting_nums = []
@@ -347,7 +348,6 @@ def computer_places_piece!(board, winning_lines, board_width, center_square)
   else
     computer_places_random!(board)
   end
-  binding.pry
 end
 
 # Methods for game intro
@@ -383,6 +383,28 @@ def welcome(player_name)
   puts MESSAGES['hello'] + "#{player_name}!"
   puts ''
   sleep(1)
+end
+
+def get_number_games(how_many_games)
+  game_type = ''
+  puts
+  loop do
+    puts prompt(MESSAGES['num_games'])
+    sleep(2)
+    puts prompt(MESSAGES['num_games_2'])
+    print ' => '
+    game_type = gets.chomp.downcase.chars.first
+    break if ['t', 'm', 'g'].include?(game_type)
+    prompt(MESSAGES['invalid'])
+  end
+  case game_type
+  when 't'
+    5
+  when 'm'
+    3
+  when 'g'
+    1
+  end 
 end
 
 # Methods to determine game play
@@ -513,7 +535,10 @@ loop do
 
     case counter
     when 0
-      whos_next = get_whos_next(whos_next) 
+      whos_next = get_whos_next(whos_next)
+      system 'clear'
+      puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
+      how_many_games = get_number_games(how_many_games)
     else
       whos_next = alternate_player(whos_next)
     end
@@ -549,14 +574,12 @@ loop do
     elsif player_score == 5
       puts "#{player_name}" + (MESSAGES['won'])
     end
-    break if computer_score == 5 || player_score == 5
     
-    play_again = play_again(play_again)
-    
-    break unless play_again == 'y'
+    break if counter = how_many_games
 
   end
-  
+
+  play_again = play_again(play_again)  
   break unless play_again == 'y'
 
 end
