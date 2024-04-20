@@ -1,30 +1,12 @@
 # Tic Tac Toe by Joshua Hall
-# Note: you will need to install rainbow gem to run this code: 'gem install rainbow'. Pry must also be installed.
-
-require 'rainbow/refinement'
-using Rainbow
-
-require 'pry'
-
 require 'yaml'
 MESSAGES = YAML.load_file('tictactoe_mess.yml')
 
 # INITIALIZING VARIABLES
 
 INITIAL_MARKER = ' '
-PLAYER_MARKER = 'X'.blue.bright
-COMPUTER_MARKER = 'O'.red.bright
-
-# Default game values
-
-# num_spaces = 0
-# arr_spaces = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-# horizontal_starting_nums = [1, 2, 3]
-# board_num_spaces = 9
-# board = {1=>" ", 2=>" ", 3=>" ", 4=>" ", 5=>" ", 6=>" ", 7=>" ", 8=>" ", 9=>" "}
-# board_width = 3
-
-# winning_lines = [[1, 5, 9], [3, 5, 7], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 2, 3], [4, 5, 6], [7, 8, 9]]
+PLAYER_MARKER = "\e[34m\e[1mX\e[0m"
+COMPUTER_MARKER = "\e[31m\e[1mO\e[0m"
 
 how_many_games = 1
 num_spaces = 0
@@ -42,7 +24,7 @@ winning_verticle = []
 winning_horizontal = []
 
 player_name = ''
-computer_name = Rainbow('Serious George').red.bright
+computer_name = '' 
 
 player_score = 0
 computer_score = 0
@@ -75,13 +57,23 @@ def deep_clone(arr)
 end
 
 def get_board_width(board_width)
-  size = 1
+  prompt(MESSAGES['request_board_width'])
+  puts ''
+  sleep (1)
+  prompt(MESSAGES['request_board_width_2'])
+  puts ''
+  sleep (1)
+  prompt(MESSAGES['request_board_width_3'])
+  puts ''
+  print ' => '
+  size = gets.chomp.to_i
+end
+
+def set_board_width(board_width)
+  board_width = 1
   loop do
-    prompt(MESSAGES['request_board_width'])
-    puts ''
-    print ' => '
-    size = gets.chomp.to_i
-    if size.between?(3, 9)
+    board_width = get_board_width(board_width)
+    if board_width.between?(3, 9)
       break
     else
       puts ''
@@ -89,7 +81,7 @@ def get_board_width(board_width)
       puts ''
     end
   end
-  board_width = size
+  board_width
 end
 
 def board_num_spaces(board_width)
@@ -105,10 +97,21 @@ def board_arr_spaces(board_num_spaces)
 end
 
 # rubocop:disable Metrics/AbcSize
+def title()
+  puts "\e[36m\e[1m\e[4m\e[40m#{MESSAGES['title']}\e[0m"
+end
+
+def fade(arr)
+  arr.map do |char|
+    "\e[30m#{char}\e[0m"
+  end
+end
+
 def display_board(board, board_width, arr_spaces, player_name, computer_name)
   system 'clear'
   half_width = board_width/2
   spots = deep_clone(arr_spaces)
+  spots = fade(spots)
   spot_count = deep_clone(arr_spaces)
   current_space = 1
   margin = "    "
@@ -116,7 +119,7 @@ def display_board(board, board_width, arr_spaces, player_name, computer_name)
   #title
   print margin
   ((half_width*5)-1).times{print ' '}
-  puts "Tic Tac Toe".cyan.bright.underline.background(:black) 
+  title()
   #output top of box
   print margin + ' '
   ((board_width*5)+board_width - 1).times{print '_'}
@@ -126,7 +129,7 @@ def display_board(board, board_width, arr_spaces, player_name, computer_name)
     #outputs row with number identifying each square
     print margin + '|'
     board_width.times do 
-      print Rainbow(spots.shift.to_s).black
+      print spots.shift
       if spot_count.shift > 9
         print "   |"
       else
@@ -149,13 +152,13 @@ def display_board(board, board_width, arr_spaces, player_name, computer_name)
     print margin + '|'
     (board_width - 1).times{print '-----+'}
     print "-----|"
-    puts
+    puts ''
   end
   #output final row
   print margin + '|'
   
   board_width.times do 
-    print Rainbow(spots.shift.to_s).black
+    print spots.shift
     if spot_count.shift > 9
       print "   |"
     else
@@ -173,7 +176,8 @@ def display_board(board, board_width, arr_spaces, player_name, computer_name)
   #outputs bottom of box
   print margin + '|'
   board_width.times{print '_____|'}
-  puts
+  puts ''
+  puts ''
 end
 # rubocop:enable Metrics/AbcSize
 
@@ -338,7 +342,40 @@ def empty_center?(center_square, board)
   end
 end
 
-def computer_places_piece!(board, winning_lines, board_width, center_square)
+def computer_places_piece!(board, winning_lines, board_width, center_square, computer_name)
+  case computer_name
+  when "\e[31m\e[1mSilly Sally\e[0m"
+    computer_placement_random!(board, winning_lines, board_width, center_square, computer_name)
+  when "\e[31m\e[1mRonald Duck\e[0m"
+    computer_placement_offense!(board, winning_lines, board_width, center_square, computer_name)
+  when "\e[31m\e[1mTuck the Tortoise\e[0m"
+    computer_placement_defense!(board, winning_lines, board_width, center_square, computer_name)
+  when "\e[31m\e[1mSerious George\e[0m"
+    computer_placement_advanced!(board, winning_lines, board_width, center_square, computer_name)
+  end
+end
+
+def computer_placement_random!(board, winning_lines, board_width, center_square, computer_name)
+  computer_places_random!(board)
+end
+
+def computer_placement_offense!(board, winning_lines, board_width, center_square, computer_name)
+  if computer_offense_move?(board, winning_lines, board_width)
+    computer_places_offense!(board, winning_lines, board_width)
+  else
+    computer_places_random!(board)
+  end
+end
+
+def computer_placement_defense!(board, winning_lines, board_width, center_square, computer_name)
+  if computer_defense_move?(board, winning_lines, board_width)
+    computer_places_defense!(board, winning_lines, board_width)
+  else
+    computer_places_random!(board)
+  end
+end
+
+def computer_placement_advanced!(board, winning_lines, board_width, center_square, computer_name)
   if computer_offense_move?(board, winning_lines, board_width)
     computer_places_offense!(board, winning_lines, board_width)
   elsif computer_defense_move?(board, winning_lines, board_width)
@@ -351,19 +388,74 @@ def computer_places_piece!(board, winning_lines, board_width, center_square)
 end
 
 # Methods for game intro
+def welcome()
+  puts "\e[36m\e[1m\e[4m#{MESSAGES['welcome']}\e[0m"
+end
 
-def intro(computer_name, board_width)
+def get_computer_personality(choice)
+  loop do 
+    system 'clear'
+    welcome()
+    puts ''
+    puts (MESSAGES['choose_personality'])
+    sleep(1)
+    puts ''
+    prompt(MESSAGES['choose_personality_2'])
+    sleep(1)
+    puts ''
+    prompt(MESSAGES['choose_personality_3'])
+    prompt(MESSAGES['choose_personality_4'])
+    prompt(MESSAGES['choose_personality_5'])
+    prompt(MESSAGES['choose_personality_6'])
+    puts ''
+    print ' => '
+    choice = gets.chomp.to_i
+    break if (1..4).include?(choice)
+    puts MESSAGES['invalid']
+  end
+  choice
+end
+
+def set_computer_personality(computer_name)
+  choice = get_computer_personality(choice)
+  case choice
+  when 1
+    computer_name = "\e[31m\e[1mSilly Sally\e[0m"
+  when 2
+    computer_name = "\e[31m\e[1mRonald Duck\e[0m"
+  when 3
+    computer_name = "\e[31m\e[1mTuck the Tortoise\e[0m"
+  when 4
+    computer_name = "\e[31m\e[1mSerious George\e[0m"
+  end
+  computer_name
+end
+
+def intro()
   system 'clear'
-  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
+  welcome()
+  puts ''
+  puts (MESSAGES['welcome_2'])
   puts ''
   sleep(1)
+  puts (MESSAGES['rules'])
+  sleep(1)
+  puts (MESSAGES['rules_2'])
+  puts ''
+  sleep(1)
+  puts (MESSAGES['introductions'])
+  puts ''
+  sleep(2)
+end
+
+def intro_computer_player(computer_name)
+  system 'clear'
+  welcome()
+  puts ''
   puts (MESSAGES['comp_intro_1']) + "#{computer_name}" + (MESSAGES['comp_intro_2'])
   puts ''
   sleep(2)
-  puts (MESSAGES['rules'])
-  puts (MESSAGES['rules_2'])
   puts ''
-  sleep(3)
 end
 
 def set_player_name(player_name)
@@ -372,12 +464,12 @@ def set_player_name(player_name)
   print ' => '
   player_name = gets.chomp
   puts ''
-  player_name.blue.bright
+  "\e[34m\e[1m#{player_name}\e[0m"
 end
 
-def welcome(player_name)
+def welcome_player(player_name)
   system 'clear'
-  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
+  welcome()
   puts ''
   sleep(1)
   puts MESSAGES['hello'] + "#{player_name}!"
@@ -386,49 +478,47 @@ def welcome(player_name)
 end
 
 def get_number_games(how_many_games)
-  game_type = ''
-  puts
+  puts ''
   loop do
     puts prompt(MESSAGES['num_games'])
     sleep(2)
     puts prompt(MESSAGES['num_games_2'])
     print ' => '
-    game_type = gets.chomp.downcase.chars.first
-    break if ['t', 'm', 'g'].include?(game_type)
+    how_many_games = gets.chomp.to_i
+    break if (1..3).include?(how_many_games)
     prompt(MESSAGES['invalid'])
   end
-  case game_type
-  when 't'
-    5
-  when 'm'
-    3
-  when 'g'
-    1
-  end 
+  how_many_games
 end
 
 # Methods to determine game play
+def get_whos_first(user_choice, player_name, computer_name)
+  puts ''
+  prompt(MESSAGES['go_first_1'])
+  sleep(1)
+  puts ''
+  prompt(MESSAGES['go_first_2'])
+  sleep(1)
+  prompt(MESSAGES['go_first_3'] + "#{player_name}")
+  prompt(MESSAGES['go_first_4'] + "#{computer_name}")
+  prompt(MESSAGES['go_first_5'])
+  puts ''
+  print ' => '
+  user_choice = gets.chomp.to_i
+end
 
-def get_whos_next(whos_next)
+def set_whos_first(whos_first, player_name, computer_name)
   loop do
-    puts ''
-    prompt(MESSAGES['go_first_1'])
-    sleep(1)
-    prompt(MESSAGES['go_first_2'])
-    sleep(1)
-    prompt(MESSAGES['go_first_3'])
-    puts ''
-    print ' => '
-    user_response = gets.chomp
-    case user_response.chars.first.downcase
-    when 'y'
-      whos_next = 'player'
+    user_choice = get_whos_first(user_choice, player_name, computer_name)
+    case user_choice
+    when 1
+      whos_first = player_name
       break
-    when 'n'
-      whos_next = 'computer'
+    when 2
+      whos_first = computer_name
       break
-    when 'c'
-      whos_next = ['player', 'computer'].sample
+    when 3
+      whos_first = [player_name, computer_name].sample
       break
     else
       puts ''
@@ -436,17 +526,17 @@ def get_whos_next(whos_next)
       puts ''
     end
   end
-  whos_next
+  whos_first
 end
 
 def declare_whos_next(whos_next, player_name, computer_name)
   system 'clear'
-  puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
+  welcome()
   puts ''
 
-  if whos_next == 'player'
+  if whos_next == player_name
     puts "#{player_name}" + (MESSAGES['announce_who_first'])
-  else
+  elsif whos_next == computer_name
     puts "#{computer_name}" + (MESSAGES['announce_who_first'])
   end
 
@@ -454,20 +544,36 @@ def declare_whos_next(whos_next, player_name, computer_name)
 end
 
 def place_piece!(board, whos_next, computer_name, winning_lines, board_width, center_square)
-  if whos_next == 'computer'
-    puts "#{computer_name} " + (MESSAGES['thinking'])
-    sleep(rand(2..4))
-    computer_places_piece!(board, winning_lines, board_width, center_square)
+  if whos_next == computer_name
+    message_num = rand(1..5)
+    random_thinking_message(message_num, computer_name)
+    computer_places_piece!(board, winning_lines, board_width, center_square, computer_name)
   else
     player_places_piece!(board)
   end
 end
 
-def alternate_player(whos_next)
-  if whos_next == 'computer'
-    whos_next = 'player'
+def random_thinking_message(message_num, computer_name)
+  case message_num
+  when 1 
+    puts "#{computer_name}" + (MESSAGES['thinking'])
+  when 2 
+    puts "#{computer_name}" + (MESSAGES['thinking_2'])
+  when 3 
+    puts "#{computer_name}" + (MESSAGES['thinking_3'])
+  when 4 
+    puts "#{computer_name}" + (MESSAGES['thinking_4'])
+  when 5 
+    puts "#{computer_name}" + (MESSAGES['thinking_5'])
+  end
+  sleep(rand(2..4))
+end
+
+def alternate_player(whos_next, player_name, computer_name)
+  if whos_next == computer_name
+    whos_next = player_name
   else
-    whos_next = 'computer'
+    whos_next = computer_name
   end
 end
 
@@ -493,28 +599,47 @@ def board_full?(board)
   empty_squares(board).empty?
 end
 
-def someone_won?(board, winning_lines, board_width)
-  !!detect_winner(board, winning_lines, board_width)
+def someone_won?(board, winning_lines, board_width, player_name, computer_name)
+  !!detect_winner(board, winning_lines, board_width, player_name, computer_name)
 end
 
-def detect_winner(board, winning_lines, board_width)
+def detect_winner(board, winning_lines, board_width, player_name, computer_name)
   winning_lines.each do |line|
     if board.values_at(*line).count(PLAYER_MARKER) == board_width
-      return 'Player'
+      return player_name
     elsif board.values_at(*line).count(COMPUTER_MARKER) == board_width
-      return 'Computer'
+      return computer_name
     end
   end
   nil
 end
 
+def continue_playing(decision)
+  prompt(MESSAGES['continue'])
+  puts ''
+  prompt(MESSAGES['continue_2'])
+  prompt(MESSAGES['continue_3'])
+  prompt(MESSAGES['continue_4'])
+  print " => "
+  decide = gets.chomp.to_i
+  case decide
+  when 1
+    return 'y'
+  else 
+    return 'n'
+  end
+end
+
 # LOGIC OF PROGRAM
 
 loop do
-  intro(computer_name, board_width)
+  intro()
+  computer_name = set_computer_personality(computer_name)
+  intro_computer_player(computer_name)
   player_name = set_player_name(player_name)
-  welcome(player_name)
-  board_width = get_board_width(board_width)
+  welcome_player(player_name)
+  board_width = set_board_width(board_width)
+  decision = 'y'
 
   #set game parameters based on user input
   board_num_spaces = board_num_spaces(board_width)
@@ -524,6 +649,8 @@ loop do
   horizontal_starting_nums(board_width)
   winning_lines = winning_lines(winning_lines, board_width, board_spaces)
   center_square = set_center_square(board_width, center_square)
+  whos_first = ''
+  whos_next = ''
 
   counter = 0
 
@@ -531,36 +658,33 @@ loop do
     board = initialize_board(board_num_spaces)
 
     system 'clear'
-    puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
-
-    case counter
-    when 0
-      whos_next = get_whos_next(whos_next)
-      system 'clear'
-      puts Rainbow(MESSAGES['welcome']).cyan.bright.underline
+    welcome()
+    if counter == 0
       how_many_games = get_number_games(how_many_games)
-    else
-      whos_next = alternate_player(whos_next)
+      system 'clear'
+      welcome()
+      whos_first = set_whos_first(whos_first, player_name, computer_name)
+      whos_next = whos_first
+      system 'clear'
+      welcome()
     end
-    
+  
     declare_whos_next(whos_next, player_name, computer_name)
-
-    counter += 1
 
     loop do
       display_board(board, board_width, arr_spaces, player_name, computer_name)
       place_piece!(board, whos_next, computer_name, winning_lines, board_width, center_square)
-      whos_next = alternate_player(whos_next)
-      break if someone_won?(board, winning_lines, board_width) || board_full?(board)
+      whos_next = alternate_player(whos_next, player_name, computer_name)
+      break if someone_won?(board, winning_lines, board_width, player_name, computer_name) || board_full?(board)
     end
 
     display_board(board, board_width, arr_spaces, player_name, computer_name)
 
-    if someone_won?(board, winning_lines, board_width)
-      prompt "#{detect_winner(board, winning_lines, board_width)}" + (MESSAGES['won'])
-      if detect_winner(board, winning_lines, board_width) == 'Player'
+    if someone_won?(board, winning_lines, board_width, player_name, computer_name)
+      prompt "#{detect_winner(board, winning_lines, board_width, player_name, computer_name)}" + (MESSAGES['won'])
+      if detect_winner(board, winning_lines, board_width, player_name, computer_name) == player_name
         player_score += 1
-      elsif detect_winner(board, winning_lines, board_width) == 'Computer'
+      elsif detect_winner(board, winning_lines, board_width, player_name, computer_name) == computer_name
         computer_score += 1
       end
     else
@@ -569,19 +693,27 @@ loop do
 
     prompt (MESSAGES['score_update_1']) + "#{computer_name} #{computer_score}" + (MESSAGES['score_update_2']) + "#{player_name} " "#{player_score}" + (MESSAGES['score_update_3'])
 
-    if computer_score == 5
-      puts "#{computer_name}" + (MESSAGES['won'])
-    elsif player_score == 5
-      puts "#{player_name}" + (MESSAGES['won'])
+    if computer_score == how_many_games
+      puts "#{computer_name}" + (MESSAGES['won_tournament'])
+    elsif player_score == how_many_games
+      puts "#{player_name}" + (MESSAGES['won_tournament'])
     end
     
-    break if counter = how_many_games
+    counter += 1
 
+  break if player_score == how_many_games ||
+            computer_score == how_many_games ||
+            continue_playing(decision) != 'y'
   end
-
+  
   play_again = play_again(play_again)  
-  break unless play_again == 'y'
-
+  
+  if play_again != 'y'
+    break
+  else
+    player_score = 0
+    computer_score = 0
+  end
 end
 
 system 'clear'

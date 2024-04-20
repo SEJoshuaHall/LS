@@ -1,15 +1,7 @@
-def deep_clone(arr)
-  arr.map { |el| el.is_a?(Array) ? deep_clone(el) : el }
-end
-
-arr = ['a', 'b', 'c', 'd']
-arr2 = deep_clone(arr)
-
-p arr
-p arr2
-arr[0] = 'e'
-p arr
-p arr2
-arr2[1] = 'f'
-p arr
-p arr2
+when "\e[31m\e[1mSilly Sally\e[0m"
+  computer_placement_random!(board, winning_lines, board_width, center_square, computer_name)
+when "\e[31m\e[1mRonald Duck\e[0m"
+  computer_placement_offense!(board, winning_lines, board_width, center_square, computer_name)
+when "\e[31m\e[1mTuck the Tortoise\e[0m"
+  computer_placement_defense!(board, winning_lines, board_width, center_square, computer_name)
+when "\e[31m\e[1mSerious George\e[0m"
