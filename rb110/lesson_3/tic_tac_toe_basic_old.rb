@@ -24,7 +24,7 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
 
 player_score = 0
 computer_score = 0
-computer_next = 'n' #default
+computer_next = 'n' # default
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -54,7 +54,6 @@ def initialize_board
   (1..9).each { |num| new_board[num] = INITIAL_MARKER }
   new_board
 end
-
 
 def joinor(arr, delimiter=', ', word='or')
   case arr.size
@@ -90,28 +89,28 @@ Note: assignment asks that computer detect 2 in a row for defensive or offensive
 def computer_defense_move?(brd)
   WINNING_LINES.any? do |line|
     brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
-    brd.values_at(*line).count(INITIAL_MARKER) == 1
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 end
 
 def computer_offense_move?(brd)
   WINNING_LINES.any? do |line|
     brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
-    brd.values_at(*line).count(INITIAL_MARKER) == 1
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 end
 
 def computer_places_defense!(brd)
   matches = WINNING_LINES.select do |line|
     brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
-    brd.values_at(*line).count(INITIAL_MARKER) == 1
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 
   select_match = matches.sample
   if brd[select_match[0]] == ' '
     brd[select_match[0]] = COMPUTER_MARKER
   elsif brd[select_match[1]] == ' '
-    brd[select_match[1]] = COMPUTER_MARKER 
+    brd[select_match[1]] = COMPUTER_MARKER
   elsif brd[select_match[2]] == ' '
     brd[select_match[2]] = COMPUTER_MARKER
   end
@@ -120,8 +119,8 @@ end
 
 def computer_places_offense!(brd)
   matches = WINNING_LINES.select do |line|
-  brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
-  brd.values_at(*line).count(INITIAL_MARKER) == 1
+    brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 
   select_match = matches.sample
@@ -129,7 +128,7 @@ def computer_places_offense!(brd)
   if brd[select_match[0]] == ' '
     brd[select_match[0]] = COMPUTER_MARKER
   elsif brd[select_match[1]] == ' '
-    brd[select_match[1]] = COMPUTER_MARKER 
+    brd[select_match[1]] = COMPUTER_MARKER
   elsif brd[select_match[2]] == ' '
     brd[select_match[2]] = COMPUTER_MARKER
   end
@@ -140,7 +139,6 @@ def computer_places_random!(brd)
   square = empty_squares(brd).sample
   brd[square] = COMPUTER_MARKER
 end
-
 
 def computer_places_piece!(brd)
   if computer_offense_move?(brd)
@@ -177,9 +175,9 @@ def set_computer_next(computer_first)
   puts "Would you like to go first? Enter 'y' or 'n'. Or if you want the computer to choose, enter 'c'."
   user_response = gets.chomp
   if user_response == 'n'
-    computer_first = 'y'
+    'y'
   elsif user_response == 'c'
-    computer_first = ['y', 'n'].sample
+    ['y', 'n'].sample
   else
     computer_first
   end
@@ -193,14 +191,14 @@ loop do
   loop do
     display_board(board)
 
-    if computer_next == 'y' 
+    if computer_next == 'y'
       computer_places_piece!(board)
       computer_next = 'n'
     else
       player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
+      break if someone_won?(board) || board_full?(board)
       computer_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
+      break if someone_won?(board) || board_full?(board)
     end
   end
 
@@ -218,17 +216,17 @@ loop do
   end
 
   prompt "Score: Computer #{computer_score}, Player #{player_score}!"
-  
+
   if computer_score == 5
     puts "Computer won!"
   elsif player_score == 5
     puts "Player won!"
   end
   break if computer_score == 5 || player_score == 5
-  
+
   prompt "Play again? (y or n)"
   answer = gets.chomp
-  
+
   break unless answer.downcase.start_with?('y')
 end
 
