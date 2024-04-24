@@ -2,36 +2,11 @@
 require 'yaml'
 MESSAGES = YAML.load_file('tictactoe_mess.yml')
 
-# INITIALIZING VARIABLES
-
-INITIAL_MARKER = ' '
-PLAYER_MARKER = "\e[34m\e[1mX\e[0m"
-COMPUTER_MARKER = "\e[31m\e[1mO\e[0m"
-
-how_many_games = 1
-num_spaces = 0
-arr_spaces = []
-board_num_spaces = 0
-board = {}
-board_width = 1
-center_square = 0
-
-winning_lines = []
-
-player_name = ''
-computer_name = ''
-
-player_score = 0
-computer_score = 0
-
-whos_next = ''
-play_again = ''
-
 # DEFINING METHODS
 
 # Methods for formatting output
 def prompt(msg)
-  puts "=> #{msg}"
+  puts "\n => #{msg}"
 end
 
 def joinor(arr, delimiter=', ', word='or')
@@ -53,13 +28,10 @@ end
 
 def get_board_width(_board_width)
   prompt(MESSAGES['request_board_width'])
-  puts ''
   sleep(1)
   prompt(MESSAGES['request_board_width_2'])
-  puts ''
   sleep(1)
   prompt(MESSAGES['request_board_width_3'])
-  puts ''
   print ' => '
   gets.chomp.to_i
 end
@@ -70,9 +42,7 @@ def implement_board_width(board_width)
     if board_width.between?(3, 9)
       break
     else
-      puts ''
-      puts MESSAGES['invalid']
-      puts ''
+      puts "\n#{MESSAGES['invalid']}\n"
     end
   end
   board_width
@@ -110,10 +80,11 @@ def display_board(board, board_width, arr_spaces, _player_name, _computer_name)
   current_space = 1
   margin = "    "
 
-  # title
+  # print title
   print margin
   ((half_width * 5) - 1).times { print ' ' }
   title
+  
   # output top of box
   print "#{margin} "
   ((board_width * 5) + board_width - 1).times { print '_' }
@@ -145,8 +116,7 @@ def display_board(board, board_width, arr_spaces, _player_name, _computer_name)
     # outputs bottom of box
     print "#{margin}|"
     (board_width - 1).times { print '-----+' }
-    print "-----|"
-    puts ''
+    print "-----|\n"
   end
   # output final row
   print "#{margin}|"
@@ -170,8 +140,7 @@ def display_board(board, board_width, arr_spaces, _player_name, _computer_name)
   # outputs bottom of box
   print "#{margin}|"
   board_width.times { print '_____|' }
-  puts ''
-  puts ''
+  puts "\n\n"
 end
 # rubocop:enable Metrics/AbcSize
 
@@ -267,8 +236,7 @@ def player_places_piece!(board)
   loop do
     prompt(MESSAGES['where_place'] +
           "#{joinor(empty_squares(board))}." +
-          MESSAGES['where_place_2'])
-    puts ''
+          MESSAGES['where_place_2'] + "\n")
     print ' => '
     square = gets.chomp.to_i
     break if empty_squares(board).include?(square)
@@ -392,19 +360,12 @@ end
 def ask_computer_personality
   system 'clear'
   welcome
-  puts ''
-  puts(MESSAGES['choose_personality'])
+  puts "\n#{(MESSAGES['choose_personality'])}" + "\n"
   sleep(1)
-  puts ''
-  prompt(MESSAGES['choose_personality_2'])
+  prompt(MESSAGES['choose_personality_2'] + "\n")
   sleep(1)
-  puts ''
-  prompt(MESSAGES['choose_personality_3'])
-  prompt(MESSAGES['choose_personality_4'])
-  prompt(MESSAGES['choose_personality_5'])
-  prompt(MESSAGES['choose_personality_6'])
-  puts ''
-  print ' => '
+  prompt(MESSAGES['choose_personality_3'] + "\n => " + MESSAGES['choose_personality_4'] + "\n => " + MESSAGES['choose_personality_5'] + "\n => " + MESSAGES['choose_personality_6'] + "\n")
+  print "\n => "
   gets.chomp.to_i
 end
 
@@ -436,20 +397,13 @@ end
 def intro
   system 'clear'
   welcome
-  puts ''
-  puts(MESSAGES['welcome_2'])
-  puts ''
-  puts ''
+  puts("\n" + MESSAGES['welcome_2'] + "\n\n")
   sleep(1)
   puts(MESSAGES['rules'])
   sleep(2)
-  puts(MESSAGES['rules_2'])
-  puts ''
+  puts(MESSAGES['rules_2'] + "\n")
   sleep(2)
-  puts(MESSAGES['rules_3'])
-  puts ''
-  puts ''
-  puts ''
+  puts(MESSAGES['rules_3'] + "\n\n")
   sleep(2)
   puts(MESSAGES['enter_to_continue'])
   gets.chomp
@@ -458,35 +412,33 @@ end
 def intro_computer_player(computer_name)
   system 'clear'
   welcome
-  puts ''
-  puts (MESSAGES['comp_intro_1']) + computer_name.to_s +
-       (MESSAGES['comp_intro_2'])
-  puts ''
+  puts ("\n" + MESSAGES['comp_intro_1']) + computer_name.to_s +
+       (MESSAGES['comp_intro_2'] + "\n")
   sleep(2)
-  puts ''
 end
 
 def implement_player_name
-  prompt(MESSAGES['name_prompt'])
-  puts ''
+  name = ''
+  loop do
+  prompt(MESSAGES['name_prompt'] + "\n")
   print ' => '
   name = gets.chomp
-  puts ''
+  break unless name == ''
+  puts ("\n" + MESSAGES['invalid'] + "\n")
+  end
   "\e[34m\e[1m#{name}\e[0m"
 end
 
 def welcome_player(player_name)
   system 'clear'
   welcome
-  puts ''
   sleep(1)
-  puts MESSAGES['hello'] + "#{player_name}!"
-  puts ''
+  puts "\n" + MESSAGES['hello'] + "#{player_name}!\n"
   sleep(1)
 end
 
 def get_number_games(how_many_games)
-  puts ''
+  puts "\n"
   loop do
     puts prompt(MESSAGES['num_games'])
     sleep(2)
@@ -501,16 +453,11 @@ end
 
 # Methods to determine game play
 def get_whos_first(_user_choice, player_name, computer_name)
-  puts ''
   prompt(MESSAGES['go_first_1'])
   sleep(1)
-  puts ''
   prompt(MESSAGES['go_first_2'])
   sleep(1)
-  prompt(MESSAGES['go_first_3'] + player_name.to_s)
-  prompt(MESSAGES['go_first_4'] + computer_name.to_s)
-  prompt(MESSAGES['go_first_5'])
-  puts ''
+  prompt(MESSAGES['go_first_3'] + "#{player_name.to_s}" + "\n => " + MESSAGES['go_first_4'] + "#{computer_name.to_s}" + "\n => " + MESSAGES['go_first_5'])
   print ' => '
   gets.chomp.to_i
 end
@@ -529,9 +476,7 @@ def implement_whos_first(whos_first, player_name, computer_name)
       whos_first = [player_name, computer_name].sample
       break
     else
-      puts ''
-      prompt(MESSAGES['invalid'])
-      puts ''
+      prompt("\n" + MESSAGES['invalid'] + "\n")
     end
   end
   whos_first
@@ -540,7 +485,7 @@ end
 def declare_whos_next(whos_next, player_name, computer_name)
   system 'clear'
   welcome
-  puts ''
+  puts "\n"
 
   if whos_next == player_name
     puts player_name.to_s + (MESSAGES['announce_who_first'])
@@ -564,18 +509,9 @@ def place_piece!(board, whos_next, computer_name, winning_lines, board_width,
 end
 
 def random_thinking_message(message_num, computer_name)
-  case message_num
-  when 1
-    puts computer_name.to_s + (MESSAGES['thinking'])
-  when 2
-    puts computer_name.to_s + (MESSAGES['thinking_2'])
-  when 3
-    puts computer_name.to_s + (MESSAGES['thinking_3'])
-  when 4
-    puts computer_name.to_s + (MESSAGES['thinking_4'])
-  when 5
-    puts computer_name.to_s + (MESSAGES['thinking_5'])
-  end
+  message_for_num = {1 => 'thinking', 2 => 'thinking_2', 3 => 'thinking_3', 4 => 'thinking_4', 5 => 'thinking_5'} 
+  thinking_message = MESSAGES[message_for_num[message_num]]
+  puts computer_name.to_s + thinking_message
   sleep(rand(2..4))
 end
 
@@ -590,8 +526,7 @@ end
 def play_again(_play_again)
   answer = ''
   loop do
-    prompt(MESSAGES['play_again'])
-    puts ''
+    prompt(MESSAGES['play_again'] + "\n")
     print ' => '
     answer = gets.chomp.downcase.chars.first
     if answer == 'y' || answer == 'n'
@@ -625,8 +560,7 @@ def detect_winner(board, winning_lines, board_width, player_name, computer_name)
 end
 
 def continue_playing(_decision)
-  prompt(MESSAGES['continue'])
-  puts ''
+  prompt(MESSAGES['continue'] + "\n")
   prompt(MESSAGES['continue_2'])
   prompt(MESSAGES['continue_3'])
   prompt(MESSAGES['continue_4'])
@@ -639,6 +573,31 @@ def continue_playing(_decision)
     'n'
   end
 end
+
+# INITIALIZING VARIABLES
+
+INITIAL_MARKER = ' '
+PLAYER_MARKER = "\e[34m\e[1mX\e[0m"
+COMPUTER_MARKER = "\e[31m\e[1mO\e[0m"
+
+how_many_games = 1
+num_spaces = 0
+arr_spaces = []
+board_num_spaces = 0
+board = {}
+board_width = 1
+center_square = 0
+
+winning_lines = []
+
+player_name = ''
+computer_name = ''
+
+player_score = 0
+computer_score = 0
+
+whos_next = ''
+play_again = ''
 
 # LOGIC OF PROGRAM
 
