@@ -1,24 +1,10 @@
 =begin
-Solved Using PEDAC
 
-### Problem:
-"Write a method that takes a year as input and returns the century. The return value should be a string that begins with the century number, and ends with st, nd, rd, or th as appropriate for that number. New centuries begin in years that end with 01. So, the years 1901-2000 comprise the 20th century."
+PROBLEM
+Write a method which takes a year as input and returns a string containing the century with it's appropriate ending. Centuries begin with 01.
+Assume no negative entries.
 
-Input: integer for year
-Output: string representing century
-
-Requirements:
-  - determine century and convert to representation of that century (2 methods)
-  - use appropriate ending for century
-  - centuries begin with year with *01 and are named for the *+1 (eg 1901 begins 20th century)
-
-Questions:
-  - Can I assume that input years will be positive, non-zero numbers? (For this solution I will)
-
-Mental Model:
-  - Convert year input as integer to it's corresponding century name and return as a string. The challenge will be assigning the appropriate ending (st, nd, rd, or th).
-
-### Examples:
+EXAMPLES
 century(2000) == '20th'
 century(2001) == '21st'
 century(1965) == '20th'
@@ -29,87 +15,79 @@ century(1052) == '11th'
 century(1127) == '12th'
 century(11201) == '113th'
 
-### Data:
-  - Input: integer
-  - hash to store century endings (values) by their corresponding thousandth and hundredth places (keys)
-  - variable for the converted century
-  - string with final return value
+1st
+2nd
+3rd
+4th
+5th
+6th
+7th
+8th
+9th
+10th
+11th
+12th
+13th
+14th
+15th
+16th
+17th
+18th
+19th
+20th
+21st
+22dn
+23rd
+24th
+25th
+26th
+27th
+28th
+29th
 
-### Algorithm:
+DATA
+Input: integer
+Output: string
 
-build first method `century` to convert year to corresponding century, calls helper method `century_ending` to determine and concat appropriate ending
-  - takes an integer and assigns to parameter `year`
-  - takes all but last 2 digits and adds 1 to find the century number
-  - calls `century_ending` to find appropriate ending
-  - returns century number and ending
-build helper method `century_ending`
-  - build Hash to store century key/values
-    - example {1 => 'st'}
-  - takes century_number as argument
-  - looks up value in hash by key
-  - returns corresponding value
 
-### Code:
+ALGORYTHM
+assign century_num to:
+if ends in 0, cut off last 2 digits and subtract 1 from result
+else cut off last 2 digits
+
+determine and append ending:
+if 1*, 'th'
+elsif 1, 'st'
+elsif 2, 'nd'
+elsif 3, 'rd'
+else 'th'
+
+return resulting string
+
+CODE
 =end
 
-
-
-
-def century(year)
-  if year < 100
-    result = '1st'
-  elsif year % 100 == 0
-    century = year.digits.reverse
-    century.pop
-    century.pop
-    century = century.join.to_i
-    century_str = century.to_s
-    result = century_str + century_ending(century) 
+def century(int)
+  cent_num = int > 100 ? ((int+99)/100) : 1
+  if (cent_num/10)%10 == 1
+    "#{cent_num}th"
+  elsif cent_num%10 == 1
+    "#{cent_num}st"
+  elsif cent_num%10 == 2
+    "#{cent_num}nd"
+  elsif cent_num%10 == 3
+    "#{cent_num}rd"
   else
-    century = year.digits.reverse
-    century.pop
-    century.pop
-    century = century.join.to_i
-    century += 1
-    century_str = century.to_s
-    result = century_str + century_ending(century)
+    "#{cent_num}th"
   end
 end
 
-def century_ending(century_number)
-  century_endings = {1 => 'st', 21 => 'st', 31 => 'st', 41 => 'st', 51 => 'st', 61 => 'st', 71 => 'st', 81 => 'st', 91 => 'st',
-                     2 => 'nd', 22 => 'nd', 32 => 'nd', 42 => 'nd', 52 => 'nd', 62 => 'nd', 72 => 'nd', 82 => 'nd', 92 => 'nd',
-                     3 => 'rd', 23 => 'rd', 33 => 'rd', 43 => 'rd', 53 => 'rd', 63 => 'rd', 73 => 'rd', 83 => 'rd', 93 => 'rd'}
-  if century_number > 99
-    century_number -= century_number.round(-2)
-    if century_number < 0
-      century_number += 100
-    end
-    if century_endings.include?(century_number)
-      ending = century_endings.fetch(century_number)
-    else 
-      ending = 'th' 
-    end
-  elsif century_endings.include?(century_number)
-    ending = century_endings.fetch(century_number)
-  else 
-    ending = 'th' 
-  end
-end
-
-
-p century(2000) == '20th' # => true
-p century(2001) == '21st' # => true
-p century(1965) == '20th' # => true
-p century(256) == '3rd' # => true
-p century(5) == '1st' # => true
-p century(10103) == '102nd' # => true
-p century(1052) == '11th' # => true
-p century(1127) == '12th' # => true
-p century(11201) == '113th' # => true
-
-p century(1127) == '12th' # => true
-p century(11201) == '113th' # => true
-
-p century(112227) #== '1123rd' # => true
-p century(112001) #== '1121st' # => true
+p century(2000) == '20th'
+p century(2001) == '21st'
+p century(1965) == '20th'
+p century(256) == '3rd'
+p century(5) == '1st'
+p century(10103) == '102nd'
+p century(1052) == '11th'
+p century(1127) == '12th'
+p century(11201) == '113th'
