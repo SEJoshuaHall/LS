@@ -1,0 +1,24 @@
+
+[1mFrom:[0m /home/sejoshuahall/launch_school_programs/rb101-rb119_small_problems/medium_1/stack.rb:85 Object#commands:
+
+    [1;34m71[0m: [32mdef[0m [1;34mcommands[0m(commands_arr, register, stack)
+    [1;34m72[0m:   commands_arr.each [32mdo[0m |command|
+    [1;34m73[0m:     [32mcase[0m command
+    [1;34m74[0m:       [32mwhen[0m [31m[1;31m'[0m[31mn[1;31m'[0m[31m[0m [32mthen[0m register = command
+    [1;34m75[0m:       [32mwhen[0m [31m[1;31m'[0m[31mPUSH[1;31m'[0m[31m[0m [32mthen[0m stack << register
+    [1;34m76[0m:       [32mwhen[0m [31m[1;31m'[0m[31mADD[1;31m'[0m[31m[0m [32mthen[0m register += stack.pop
+    [1;34m77[0m:       [32mwhen[0m [31m[1;31m'[0m[31mSUB[1;31m'[0m[31m[0m [32mthen[0m register -= stack.pop
+    [1;34m78[0m:       [32mwhen[0m [31m[1;31m'[0m[31mMULT[1;31m'[0m[31m[0m [32mthen[0m register *= stack.pop
+    [1;34m79[0m:       [32mwhen[0m [31m[1;31m'[0m[31mDIV[1;31m'[0m[31m[0m [32mthen[0m register /= stack.pop
+    [1;34m80[0m:       [32mwhen[0m [31m[1;31m'[0m[31mMOD[1;31m'[0m[31m[0m [32mthen[0m register %= stack.pop
+    [1;34m81[0m:       [32mwhen[0m [31m[1;31m'[0m[31mPOP[1;31m'[0m[31m[0m [32mthen[0m register = stack.pop
+    [1;34m82[0m:       [32mwhen[0m [31m[1;31m'[0m[31mPRINT[1;31m'[0m[31m[0m [32mthen[0m print register
+    [1;34m83[0m:       [32mwhen[0m command.to_i.kind_of?([1;34;4mInteger[0m) [32mthen[0m stack = command.to_i
+    [1;34m84[0m:     [32mend[0m
+ => [1;34m85[0m:     binding.pry
+    [1;34m86[0m:     [1;34m# p register[0m
+    [1;34m87[0m:     [1;34m# p command[0m
+    [1;34m88[0m:     [1;34m# p stack[0m
+    [1;34m89[0m:   [32mend[0m
+    [1;34m90[0m: [32mend[0m
+
