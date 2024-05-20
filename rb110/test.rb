@@ -1,10 +1,1 @@
-
-
-# Iterate through the array to find all possible slices
-
-  (0...arr.length - 2).each do |start|
-  ((start + 3)..arr.length).each do |end_point|
-    slice = arr[start...end_point]
-    result.push(slice) if is_fibonacci(slice)
-    end
-  end
+manipulating arrays and hashes. For example, an exercise might be "reverse an array without using the built-in Array#reverse method", or "select the element out of the array if its index is a Fibonacci number," or "write a method that removes every other element from an array"
