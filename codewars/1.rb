@@ -1,23 +1,14 @@
 =begin
-You are given a secret message you need to decipher. Here are the things you need to know to decipher it:
-
-For each word:
-
-the second and the last letter is switched (e.g. Hello becomes Holle)
-the first letter is replaced by its character code (e.g. H becomes 72)
-there are no special characters used, only letters and spaces
-words are separated by a single space
-there are no leading or trailing spaces
 
 PROBLEM
+take a set of arrays as arguments, and two at a time, evaluate for uniq values, then take that new array and evaluate against the next array. Return the final array.
 
+DATA
+Input: series of at least two arrays of integers
+Output: array of integers
 
-
-=end
-
-def decipher_this(string)
-  #your code here
-end
-
-decipher_this('72olle 103doo 100ya') == 'Hello good day'
-decipher_this('82yade 115te 103o') == 'Ready set go'
+ALG
+set count to number of input arrays
+set current_arr to input array 1
+for count - 1 iterate
+  
