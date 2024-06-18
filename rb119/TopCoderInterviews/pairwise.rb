@@ -43,12 +43,10 @@ iterate over pairs
 sum selected and return
 =end
 #### Tests
-def pairwise(array, int)
-  return 0 if array.empty?
+def get_pairs(array, int)
   arr = array.dup
   pairs = []
   selected_indices = []
-  
   arr.each_with_index do |num1, current_idx|
     next if selected_indices.include?(current_idx)
     ((current_idx + 1)..(array.length - 1)).each do |comp_idx|
@@ -63,8 +61,12 @@ def pairwise(array, int)
       end
     end
   end
+  [pairs, selected_indices]
+end
 
-  p selected_indices
+def pairwise(array, int)
+  return 0 if array.empty?
+  pairs, selected_indices = def get_pairs(array, int)[0], def get_pairs(array, int)[1]
 
   # pairs.map! {|sub| sub.sort}
   # pairs = pairs.uniq.flatten
