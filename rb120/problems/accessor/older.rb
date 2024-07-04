@@ -1,11 +1,14 @@
 class Person
   attr_writer :age
+  
   def older_than?(other)
     age > other.age
   end
 
   protected
+
   attr_reader :age
+
 end
 
 person1 = Person.new

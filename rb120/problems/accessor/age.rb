@@ -1,12 +1,17 @@
 class Person
-  def age
-    @age * 2
-  end
-
   def age=(age)
-    @age = age * 2
+    @age = double(age)
   end
 
+  def age
+    double(@age)
+  end
+
+  private
+
+  def double(value)
+    value * 2
+  end
 end
 
 person1 = Person.new

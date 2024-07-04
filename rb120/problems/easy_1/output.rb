@@ -10,21 +10,6 @@ class Pet
   end
 end
 
-# name = 'Fluffy'
-# fluffy = Pet.new(name)
-# puts fluffy.name
-# puts fluffy
-# puts fluffy.name
-# puts name
-
-=begin
-What output?
-Fluffy
-My name is Fluffy.
-Fluffy
-My name is Fluffy.
-=end
-
 name = 42
 fluffy = Pet.new(name)
 name += 1

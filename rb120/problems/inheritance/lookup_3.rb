@@ -22,4 +22,4 @@ end
 bird1 = Bird.new('Red')
 bird1.color
 
-# Bird -> Flyable -> Animal
+#Bird, Flyable, Animal

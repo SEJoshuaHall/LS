@@ -1,21 +1,22 @@
 class Banner
   def initialize(message)
     @message = message
-    @length = message.length + 2
+    @width = message.length
   end
-
+  
   def to_s
     [horizontal_rule, empty_line, message_line, empty_line, horizontal_rule].join("\n")
   end
-
+  
   private
+  attr_reader :message, :length
 
   def horizontal_rule
-    "+" + ("-" * @length) + "+"
+    "+-#{"-" * (@width)}-+"
   end
 
   def empty_line
-    "|" + (" " * @length) + "|"
+    "| #{" " * (@width)} |"
   end
 
   def message_line
@@ -25,20 +26,6 @@ end
 
 banner = Banner.new('To boldly go where no one has gone before.')
 puts banner
-=begin
-+--------------------------------------------+
-|                                            |
-| To boldly go where no one has gone before. |
-|                                            |
-+--------------------------------------------+
-=end
 
 banner = Banner.new('')
 puts banner
-=begin
-+--+
-|  |
-|  |
-|  |
-+--+
-=end

@@ -1,8 +1,8 @@
 class Person
-  attr_reader :name
+  attr_writer :name
 
-  def name=(name)
-    @name = "Mr. #{name}"
+  def name
+    "Mr. #{@name}"
   end
 end
 

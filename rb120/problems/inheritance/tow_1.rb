@@ -5,7 +5,7 @@ module Towable
 end
 
 class Truck
-include Towable
+  include Towable
 end
 
 class Car

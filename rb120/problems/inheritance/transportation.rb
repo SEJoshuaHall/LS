@@ -1,4 +1,4 @@
-module Transportation
+module Trnsportation
   class Vehicle
   end
 
@@ -8,5 +8,3 @@ module Transportation
   class Car < Vehicle
   end
 end
-
-Transportation::Truck.new

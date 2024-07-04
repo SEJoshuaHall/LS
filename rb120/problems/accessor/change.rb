@@ -1,7 +1,8 @@
 class Person
   def name=(name)
-    @first_name = name.split.first
-    @last_name = name.split.last
+    parts = name.split
+    @first_name = parts.first
+    @last_name = parts.size > 1 ? parts.last : ""
   end
 
   def name

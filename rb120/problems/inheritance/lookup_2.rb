@@ -10,4 +10,4 @@ end
 cat1 = Cat.new
 cat1.color
 
-# Cat -> Animal -> Object -> Kernel -> BasicObject
+#Cat, Animal, Object, Kernel, BasicObject

@@ -1,19 +1,12 @@
 class Person
+  attr_accessor :first_name, :last_name
   def initialize(first_name, last_name)
     @first_name = first_name.capitalize
     @last_name = last_name.capitalize
   end
 
-  def first_name=(first_name)
-    @first_name = first_name.capitalize
-  end
-
-  def last_name=(last_name)
-    @last_name = last_name.capitalize
-  end
-  
   def to_s
-    "#{@first_name} #{@last_name}"
+    "#{@first_name.capitalize} #{@last_name.capitalize}"
   end
 end
 

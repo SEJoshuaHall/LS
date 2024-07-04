@@ -5,8 +5,8 @@ module Walkable
 end
 
 class Cat
-  include Walkable
   attr_reader :name
+  include Walkable
 
   def initialize(name)
     @name = name

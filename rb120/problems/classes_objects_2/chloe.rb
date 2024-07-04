@@ -6,7 +6,7 @@ class Cat
   end
 
   def rename(name)
-    @name = name
+    self.name = name
   end
 end
 

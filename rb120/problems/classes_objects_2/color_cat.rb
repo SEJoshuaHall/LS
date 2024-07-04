@@ -1,21 +1,15 @@
 class Cat
-  COLOR = 'purple'
-  @@total = 0
+  attr_reader :name, :color
+  COLOR = "purple"
+
   def initialize(name)
     @name = name
-    @@total += 1
-  end
-
-  def self.total
-    @@total
   end
 
   def greet
-    puts "Hello! My name is #{@name} and I'm a #{COLOR} cat!"
+    "Hello, my name is #{name}, and I am a #{COLOR} cat!"
   end
 end
 
 kitty = Cat.new('Sophie')
-kitty.greet
-
-# Hello! My name is Sophie and I'm a purple cat!
+p kitty.greet
