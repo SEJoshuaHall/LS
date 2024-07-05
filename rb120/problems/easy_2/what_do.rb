@@ -16,7 +16,3 @@ thing = Something.new
 puts Something.dupdata
 puts thing.dupdata
 
-=begin
-ByeBye
-HelloHello
-=end

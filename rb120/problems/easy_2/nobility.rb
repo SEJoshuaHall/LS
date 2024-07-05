@@ -1,12 +1,34 @@
-module Walk
+module Walkable
   def walk
     puts "#{self} #{gait} forward"
   end
 end
 
+class Noble
+  include Walkable
+  attr_reader :name, :title, :proper_address
+
+  def initialize(name, title)
+    @name = name
+    @title = title
+    @proper_address = "#{name} #{title}"
+  end
+
+  def to_s
+    proper_address
+  end
+
+  private
+
+  def gait
+    "struts"
+  end
+
+end
+
 class Person
+  include Walkable
   attr_reader :name
-  include Walk
 
   def initialize(name)
     @name = name
@@ -24,8 +46,8 @@ class Person
 end
 
 class Cat
+  include Walkable
   attr_reader :name
-  include Walk
 
   def initialize(name)
     @name = name
@@ -43,8 +65,8 @@ class Cat
 end
 
 class Cheetah
+  include Walkable
   attr_reader :name
-  include Walk
 
   def initialize(name)
     @name = name
@@ -58,26 +80,6 @@ class Cheetah
 
   def gait
     "runs"
-  end
-end
-
-class Noble
-  attr_accessor :name, :title
-  include Walk
-
-  def initialize(name, title)
-    @name = name
-    @title = title
-  end
-
-  def to_s
-    "#{title} #{name}"
-  end
-
-  private
-
-  def gait
-    "strolls"
   end
 end
 
@@ -95,4 +97,3 @@ flash.walk
 
 byron = Noble.new("Byron", "Lord")
 byron.walk
-# => "Lord Byron struts forward"

@@ -1,17 +1,19 @@
 class Transform
-  def initialize(data)
-    @data = data
+  attr_accessor :str
+
+  def initialize(str)
+    @str = str
   end
 
   def uppercase
-    @data.upcase
+    @str.upcase
   end
 
-  def self.lowercase(str)
-    str.downcase
+  def self.lowercase(str2)
+    str2.downcase
   end
 end
 
 my_data = Transform.new('abc')
-puts my_data.uppercase #ABC
-puts Transform.lowercase('XYZ') #xyz
+puts my_data.uppercase
+puts Transform.lowercase('XYZ')

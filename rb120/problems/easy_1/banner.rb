@@ -1,7 +1,8 @@
 class Banner
-  def initialize(message)
+  def initialize(message, width=(nil))
     @message = message
-    @width = message.length
+    set_width = width ? width : message.length
+    @width = set_width > message.length ? set_width : message.length 
   end
   
   def to_s
@@ -9,7 +10,6 @@ class Banner
   end
   
   private
-  attr_reader :message, :length
 
   def horizontal_rule
     "+-#{"-" * (@width)}-+"
@@ -20,7 +20,7 @@ class Banner
   end
 
   def message_line
-    "| #{@message} |"
+    "| #{" " * ((@width - @message.length) / 2)}#{@message}#{" " * ((@width - @message.length) / 2)} |"
   end
 end
 
@@ -28,4 +28,10 @@ banner = Banner.new('To boldly go where no one has gone before.')
 puts banner
 
 banner = Banner.new('')
+puts banner
+
+banner = Banner.new('To boldly go where no one has gone before.', 50)
+puts banner
+
+banner = Banner.new('To boldly go where no one has gone before.', 5)
 puts banner

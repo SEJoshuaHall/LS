@@ -9,6 +9,7 @@ class House
   def <=>(other)
     price <=> other.price
   end
+
 end
 
 home1 = House.new(100_000)
