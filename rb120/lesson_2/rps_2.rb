@@ -2,6 +2,7 @@
 
 # Define players and set names
 class Player
+  VALUES = %w[rock paper scissors lizard spock].freeze
   attr_accessor :move, :name, :score
 
   def initialize
@@ -33,7 +34,20 @@ class Human < Player
 
       puts 'Sorry, invalid choice.'
     end
-    self.move = Move.new(choice)
+
+    case choice
+    when 'rock'
+      self.move = Rock.new
+    when 'paper'
+      self.move = Paper.new
+    when 'scissors'
+      self.move = Scissors.new
+    when 'lizard'
+      self.move = Lizard.new
+    when 'spock'
+      self.move = Spock.new
+    end
+
   end
 end
 
@@ -44,47 +58,69 @@ class Computer < Player
   end
 
   def choose
-    self.move = Move.new(Move::VALUES.sample)
+    choice = (Move::VALUES.sample)
+
+    case choice
+    when 'rock'
+      self.move = Rock.new
+    when 'paper'
+      self.move = Paper.new
+    when 'scissors'
+      self.move = Scissors.new
+    when 'lizard'
+      self.move = Lizard.new
+    when 'spock'
+      self.move = Spock.new
+    end
+  end
+end
+
+class Scissors
+  def to_s
+    'scissors'
+  end
+end
+
+class Rock
+  def to_s
+    'rock'
+  end
+end
+
+class Paper
+  def to_s
+    'paper'
+  end
+end
+
+class Lizard
+  def to_s
+    'lizard'
+  end
+end
+
+class Spock
+  def to_s
+    'spock'
   end
 end
 
 # Define moves and who won
 class Move
-  VALUES = %w[rock paper scissors lizard spock].freeze
   def initialize(value)
     @value = value
   end
 
-  def scissors?
-    @value == 'scissors'
-  end
-
-  def rock?
-    @value == 'rock'
-  end
-
-  def paper?
-    @value == 'paper'
-  end
-
-  def lizard?
-    @value == 'lizard'
-  end
-
-  def spock?
-    @value == 'spock'
-  end
-
   def >(other)
-    (rock? && (other.scissors? || other.lizard?)) ||
-      (paper? && (other.rock? || other.spock?)) ||
-      (scissors? && (other.paper? || other.lizard?)) ||
-      (spock? && (other.rock? || other.paper?)) ||
-      (lizard? && (other.spock? || other.paper?))
+    (rock && (other.scissors || other.lizard)) ||
+      (paper && (other.rock || other.spock)) ||
+      (scissors && (other.pape? || other.lizard)) ||
+      (spock && (other.rock || other.paper)) ||
+      (lizard && (other.spock || other.paper))
   end
 
   def <(other)
-    (rock? && (other.paper? || other.spock?)) ||
+    (rock && (other.paper || other.spock)) ||
       (paper? && (other.lizard? || other.scissors?)) ||
       (scissors? && (other.spock? || other.rock?)) ||
       (spock? && (other.scissors? || other.lizard?)) ||
@@ -98,11 +134,12 @@ end
 
 # Main game play logic
 class RPSGame
-  attr_accessor :human, :computer
+  attr_accessor :human, :computer, :history
 
   def initialize
     @human = Human.new
     @computer = Computer.new
+    @history = []
   end
 
   def display_welcome_message
@@ -122,11 +159,14 @@ class RPSGame
     if human.move > computer.move
       puts "#{human.name} won this round!"
       human.score += 1
+      @history << ["#{human.name} chose #{human.move}", "#{computer.name} chose #{computer.move}", "#{human.name} won this round!"]
     elsif human.move < computer.move
       puts "#{computer.name} won this round!"
       computer.score += 1
+      @history << ["#{human.name} chose #{human.move}", "#{computer.name} chose #{computer.move}", "#{computer.name} won this round!"]
     else
       puts "It's a tie this round!"
+      @history << ["#{human.name} chose #{human.move}", "#{computer.name} chose #{computer.move}", "It's a tie this round!"]
     end
     puts "The current score is:"
     puts "#{human.name}: #{human.score}"
@@ -134,7 +174,7 @@ class RPSGame
   end
 
   def winner?
-    human.score >= 3 || computer.score >= 3
+    human.score >= 1 || computer.score >= 1
   end
 
   def display_game_winner
@@ -161,6 +201,17 @@ class RPSGame
     false
   end
 
+  def display_history
+    def initialize
+      @round = 0
+    end
+    puts "Here is the history of this game."
+    # @history.each do |game_sub_array|
+    #   puts "On round #{@round}, #{game_sub_array}"
+    #   @round += 1
+    # end
+  end
+
   def play
     display_welcome_message
 
@@ -175,6 +226,7 @@ class RPSGame
       display_game_winner
       break unless play_again?
     end
+    display_history
     display_goodbye_message
   end
 end
