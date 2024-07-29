@@ -2,7 +2,7 @@ class Person
   attr_writer :secret
 
   def share_secret
-    puts @secret
+    puts secret
   end
 
   private

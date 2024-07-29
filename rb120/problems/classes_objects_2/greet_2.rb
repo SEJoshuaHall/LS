@@ -6,11 +6,11 @@ class Cat
   end
 
   def self.generic_greeting
-    puts "Hello! I'm a cat!"
+    puts "I'm a cat!"
   end
 
   def personal_greeting
-    puts "Hello! My name is #{@name}!"
+    puts "My name is #{name}!"
   end
 end
 

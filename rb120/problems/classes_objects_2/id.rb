@@ -1,20 +1,14 @@
 class Cat
-  attr_reader :name
+  attr_accessor :name
 
   def initialize(name)
     @name = name
   end
 
-  def self.generic_greeting
-    puts "I am a cat object."
-  end
-
-  def personal_greeting
-    puts "I am a cat. My name is #{name}!"
+  def identify
+    self
   end
 end
 
 kitty = Cat.new('Sophie')
-
-Cat.generic_greeting
-kitty.personal_greeting
+p kitty.identify

@@ -1,16 +1,15 @@
 class Cat
-  @@total_cats = 0
-
+  @@count = 0
   def initialize
-    @@total_cats += 1
+    @@count += 1
   end
-  
+
   def self.total
-    @@total_cats
+    puts @@count
   end
 end
 
 kitty1 = Cat.new
 kitty2 = Cat.new
 
-p Cat.total
+Cat.total

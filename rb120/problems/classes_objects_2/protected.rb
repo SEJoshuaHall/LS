@@ -2,13 +2,12 @@ class Person
   attr_writer :secret
 
   def compare_secret(other)
-    @secret == other.secret
+    secret == other.secret
   end
-  
+
   protected
 
   attr_reader :secret
-
 end
 
 person1 = Person.new
