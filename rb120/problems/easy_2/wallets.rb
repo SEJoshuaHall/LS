@@ -10,7 +10,9 @@ class Wallet
   end
 
   protected
+  
   attr_reader :amount
+
 end
 
 bills_wallet = Wallet.new(500)

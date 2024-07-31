@@ -6,7 +6,8 @@ class Pet
   end
 
   def to_s
-    "My name is #{@name.upcase}."
+    @name.upcase!
+    "My name is #{@name}."
   end
 end
 
@@ -17,3 +18,4 @@ puts fluffy.name
 puts fluffy
 puts fluffy.name
 puts name
+

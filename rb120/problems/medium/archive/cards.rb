@@ -1,24 +1,26 @@
 class Card
   include Comparable
-
   attr_reader :rank, :suit
-  @@card_ranks = {'Jack' => 11, 'Queen' => 12, 'King' => 13, 'Ace' => 14}
+
+  VALUES = { 'Jack' => 11, 'Queen' => 12, 'King' => 13, 'Ace' => 14 }
 
   def initialize(rank, suit)
     @rank = rank
     @suit = suit
-    (2..10).to_a.each {|num| @@card_ranks[num] = num }
   end
-  
+
   def <=>(other)
-    @@card_ranks[rank] <=> @@card_ranks[other.rank]
+    value <=> other.value
+  end
+
+  def value
+    VALUES.fetch(rank, rank)
   end
 
   def to_s
-    "#{rank} of #{suit}"
+    "#{@rank} of #{@suit}"
   end
 end
-
 
 cards = [Card.new(2, 'Hearts'),
          Card.new(10, 'Diamonds'),

@@ -13,7 +13,4 @@ class Graduate < Student
 end
 
 class Undergraduate < Student
-  def initialize(name, year)
-    super
-  end
 end

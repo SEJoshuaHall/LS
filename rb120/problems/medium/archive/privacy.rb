@@ -7,12 +7,12 @@ class Machine
     flip_switch(:off)
   end
 
-  def get_switch
-    switch
+  def switch_state
+    @switch
   end
   
   private
-
+  
   attr_accessor :switch
   
   def flip_switch(desired_state)
@@ -20,6 +20,6 @@ class Machine
   end
 end
 
-washer = Machine.new
-washer.start
-p washer.get_switch
+mach = Machine.new
+mach.start
+p mach.switch_state

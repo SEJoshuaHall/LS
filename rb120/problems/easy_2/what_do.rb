@@ -15,4 +15,3 @@ end
 thing = Something.new
 puts Something.dupdata
 puts thing.dupdata
-

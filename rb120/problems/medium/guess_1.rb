@@ -1,57 +1,45 @@
 class GuessingGame
-  RANGE = 1..100
   def initialize
+    @winning_number = (1..100).to_a.sample
     @guesses_remaining = 7
     @guess = 0
-    @winning_number = 0
   end
 
   def play
-    obtain_winning_number
-    loop do
-      obtain_guess
-      display_hand_result
-      break if win?
-      @guesses_remaining -= 1
-      break if @guesses_remaining == 0
+    until @guesses_remaining == 0 do
+      get_guess
+      evaluate_guess
+      break if won?
+      @guesses_remaining -=1
     end
-    display_game_result
+    end_game
   end
 
-  def obtain_winning_number
-    @winning_number = RANGE.to_a.sample
-  end
-
-  def obtain_guess
-    puts "You have #{@guesses_remaining} guesses remaining."
-    loop do
-      puts "Enter a number between 1 and 100: "
-      @guess = gets.chomp.to_i
-      break if RANGE.cover?(@guess)
-      puts 'Invalid guess. '
+  def end_game
+    puts ''
+    if won? then puts 'You won!'
+    else puts 'You have no more guesses. You lost!'
     end
   end
 
-  def display_hand_result
-    if @guess > @winning_number
-      puts 'Your guess is too high.'
-    elsif @guess < @winning_number
-      puts 'Your guess is too low.'
-    else
-      puts "That's the number!"
-    end
-  end
-
-  def win?
+  def won?
     @winning_number == @guess
   end
 
-  def display_game_result
-    puts ''
-    if win?
-      puts 'You won!'
-    else
-      puts 'You have no more guesses. You lost!'
+  def evaluate_guess
+    case 
+    when @guess > @winning_number then puts "Your guess is too high."
+    when @guess < @winning_number then puts "Your guess is too low."
+    else puts "That's the number!"
+    end
+  end
+    
+  def get_guess
+    loop do
+      puts "Enter a number between 1 and 100: "
+      @guess = gets.chomp.to_i
+      break if (1..100).cover?(@guess)
+      print "Invalid guess. "
     end
   end
 end

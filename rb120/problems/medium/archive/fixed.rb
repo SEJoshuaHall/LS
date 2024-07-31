@@ -1,15 +1,15 @@
 class FixedArray
-  def initialize(max)
-    @array = Array.new(max)
+  def initialize(array_size)
+    @array = Array.new(array_size)
   end
 
-  def [](idx)
-    @array.fetch(idx)
+  def [](index)
+    @array.fetch(index)
   end
-
-  def []=(idx, obj)
-    self[idx]
-    @array[idx] = obj
+  
+  def []=(index, value)
+    self[index]
+    @array[index] = value
   end
 
   def to_a
@@ -51,7 +51,6 @@ begin
 rescue IndexError
   puts true
 end
-
 
 begin
   fixed_array[-7] = 3

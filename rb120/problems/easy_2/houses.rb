@@ -1,15 +1,15 @@
 class House
-  attr_reader :price
   include Comparable
+
+  attr_reader :price
 
   def initialize(price)
     @price = price
   end
 
   def <=>(other)
-    price <=> other.price
+    @price <=> other.price
   end
-
 end
 
 home1 = House.new(100_000)

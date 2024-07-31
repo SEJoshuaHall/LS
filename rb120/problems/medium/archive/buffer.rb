@@ -1,22 +1,23 @@
 class CircularBuffer
-  attr_reader :size
-  attr_accessor :buffer
-
-  def initialize(size)
-    @size = size
-    @buffer = []
+  def initialize(max_length)
+    @max_length = max_length
+    @buffer = Array.new
   end
-
-  def put(obj)
-    buffer << obj
-    if buffer.count > size then buffer.shift end
+  
+  def put(int)
+    if @buffer.count == @max_length
+      @buffer.shift
+      @buffer << int
+    else
+      @buffer << int
+    end
   end
 
   def get
-    if buffer.count == 0 then return nil end
-    buffer.shift
+    @buffer.count == 0 ? nil : @buffer.shift
   end
 end
+
 
 buffer = CircularBuffer.new(3)
 puts buffer.get == nil

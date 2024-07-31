@@ -1,6 +1,6 @@
 class Pet
   attr_reader :type, :name
-
+  
   def initialize(type, name)
     @type = type
     @name = name
@@ -15,41 +15,32 @@ class Owner
     @name = name
     @number_of_pets = 0
   end
-
+  
   def to_s
-    name
+    @name
   end
 end
 
-class Shelter  
+class Shelter
   def initialize
     @adoptions = {}
   end
-  
-  def print_adoptions
-    adoptions.each_pair do |owner, pets|
-      puts "#{owner} has adopted the following pets:"
-      pets.each do |pet_sub_array|
-        puts "a #{pet_sub_array[0]} named #{pet_sub_array[1]}"
-      end
-      puts ''
-    end
-  end
-  
-  def adopt(owner, pet) #need to increase number of pets for owner
-    @owner = owner
-    @pet = pet
-    if adoptions.keys.include?(owner)
-      adoptions[owner] << [@pet.type, @pet.name]
-    else
-      adoptions[owner] = [[@pet.type, @pet.name]]
-    end
+
+  def adopt(owner, pet)
     owner.number_of_pets += 1
+    if @adoptions.keys.include?(owner) then @adoptions[owner] << pet
+    else @adoptions[owner] = [pet]
+    end
   end
 
-  private
-
-  attr_accessor :adoptions
+  def print_adoptions
+    @adoptions.keys.each do |owner|
+      puts "#{owner} has adoption the following pets"
+      @adoptions[owner].each do |pet|
+        puts "a #{pet.type} named #{pet.name}"
+      end
+    end
+  end
 end
 
 butterscotch = Pet.new('cat', 'Butterscotch')

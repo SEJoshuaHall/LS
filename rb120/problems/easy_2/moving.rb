@@ -1,11 +1,12 @@
 module Walkable
   def walk
-    puts "#{@name} #{gait} forward"
+    puts "#{self.name} #{self.gait} forward" 
   end
 end
 
 class Person
   include Walkable
+
   attr_reader :name
 
   def initialize(name)
@@ -21,6 +22,7 @@ end
 
 class Cat
   include Walkable
+  
   attr_reader :name
 
   def initialize(name)
@@ -36,6 +38,7 @@ end
 
 class Cheetah
   include Walkable
+  
   attr_reader :name
 
   def initialize(name)
