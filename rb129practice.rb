@@ -263,18 +263,3 @@ p good_dog.walk
 # Since GoodDog inherits from Animal, and Animal includes Walkable, the method can be accessed.
 =end
 
-
-card_values = {'Jack' => 11, 'Queen' => 12,  'King' => 13}
-suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-
-# {'Jack of Spades' => ['Jack', 11]}
-
-cards = {}
-
-card_values.each_pair do |k, v|
-  suits.each do |s|
-    cards["#{s} of #{k}"] = [k, v]
-  end
-end
-
-p cards

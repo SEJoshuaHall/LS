@@ -24,14 +24,14 @@ Verbs
 Turn, mark, win/lose, draw board
 
 SPIKE
-=end
+=end 
 
 #Must have the Rainbow Gem (gem install rainbow)
 
 require 'rainbow'
 require 'yaml'
 
-MESSAGES = YAML.load(File.read("TicTacToe.yml)
+MESSAGES = YAML.load(File.read("TicTacToe.yml")
 
 module TTTFunctions
   def title
