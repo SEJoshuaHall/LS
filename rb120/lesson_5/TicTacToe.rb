@@ -31,7 +31,7 @@ SPIKE
 require 'rainbow'
 require 'yaml'
 
-MESSAGES = YAML.load(File.read("TicTacToe.yml")
+MESSAGES = YAML.load(File.read("TicTacToe.yml"))
 
 module TTTFunctions
   def title

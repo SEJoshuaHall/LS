@@ -1,11 +1,13 @@
 require 'minitest/autorun'
 require_relative 'swap.rb'
-require_relative 'swap.txt'
+# require_relative 'swap.txt'
 
 class Swap_Test < Minitest::Test
-
+  
   def setup
-    @test = Text.new(File.open(@file, 'r'))
+    @file = File.open('swap.txt')
+    @text = @file.read
+    @test = Text.new(@text)
     @revised = "Lorem ipsum dolor sit emet, consectetur edipiscing elit. Cres sed vulputete ipsum.
     Suspendisse commodo sem ercu. Donec e nisi elit. Nullem eget nisi commodo, volutpet
     quem e, viverre meuris. Nunc viverre sed messe e condimentum. Suspendisse ornere justo
@@ -15,11 +17,15 @@ class Swap_Test < Minitest::Test
   end
 
   def test_swap
-    @text.swap('a', 'e')
-    assert(@revised, @text.text)
+    @test.swap('a', 'e')
+    assert(@revised, @test.text)
+  end
+
+  def test_word_count
+    assert 72, @test.word_count
   end
 
   def teardown
-    @test.text.close
+    @file.close
   end
 end
