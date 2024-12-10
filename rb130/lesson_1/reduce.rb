@@ -1,11 +1,14 @@
 def reduce(array, acc=nil)
-  if !acc then acc = array[0] end
-  array.each do |el|
-    acc = yield(acc, el)
+  acc ? counter = 0 : counter = 1
+  acc ? result = acc : result = array[0]
+  
+  while counter < array.count do
+    result = yield(result, array[counter])
+    counter += 1
   end
-  acc
-end
 
+  result
+end
 
 
 array = [1, 2, 3, 4, 5]

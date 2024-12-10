@@ -1,3 +1,6 @@
-def my_method(&block); end
+def my_method
+  yield(2)
+end
 
-my_method
+# turns the symbol into a Proc, then & turns the Proc into a block
+my_method(&:to_s)               # => "2"
