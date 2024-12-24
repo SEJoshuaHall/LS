@@ -8,6 +8,7 @@ class RobotTest < Minitest::Test
   NAME_REGEXP = /^[A-Z]{2}\d{3}$/
 
   def test_has_name
+    # skip
     assert_match NAME_REGEXP, Robot.new.name
   end
 

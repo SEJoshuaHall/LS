@@ -14,11 +14,11 @@ class Device
   end
 
   def play
-    p @recordings.last
+    @recordings.last
   end
 end
 
 listener = Device.new
 listener.listen { "Hello World!" }
 listener.listen
-listener.play # Outputs "Hello World!"
+p listener.play # Outputs "Hello World!"

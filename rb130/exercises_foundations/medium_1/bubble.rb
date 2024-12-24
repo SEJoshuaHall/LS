@@ -1,14 +1,12 @@
 def bubble_sort!(array)
   loop do
     swapped = false
-    if block_given?
-      1.upto(array.size - 1) do |index|
+    1.upto(array.size - 1) do |index|
+      if block_given?
         next if yield(array[index - 1], array[index])
         array[index - 1], array[index] = array[index], array[index - 1]
         swapped = true
-      end
-    else
-      1.upto(array.size - 1) do |index|
+      else
         next if array[index - 1] <= array[index]
         array[index - 1], array[index] = array[index], array[index - 1]
         swapped = true

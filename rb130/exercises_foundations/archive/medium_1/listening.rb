@@ -8,13 +8,13 @@ class Device
   end
 
   def listen
-    if block_given? 
+    if block_given?
       record(yield)
     end
   end
 
   def play
-    puts @recordings
+    p @recordings.last
   end
 end
 

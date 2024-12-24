@@ -1,37 +1,33 @@
-cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, :jack, :queen, :king, :ace]
+def valid_integer?(string)
+  string.to_i.to_s == string
+end
 
-deck = { :hearts   => cards,
-         :diamonds => cards,
-         :clubs    => cards,
-         :spades   => cards }
+def guess_number(max_number, max_attempts)
+  winning_number = (1..max_number).to_a.sample
+  attempts = 0
 
-def score(card)
-  case card
-  when :ace   then 11
-  when :king  then 10
-  when :queen then 10
-  when :jack  then 10
-  else card
+  loop do
+    attempts += 1
+    break if attempts > max_attempts
+
+    input = nil
+    until valid_integer?(input)
+      print 'Make a guess: '
+      input = gets.chomp
+    end
+
+    guess = input.to_i
+
+    if guess == winning_number
+      puts 'Yes! You win.'
+    else
+      puts 'Nope. Too small.' if guess < winning_number
+      puts 'Nope. Too big.'   if guess > winning_number
+
+      # Try again:
+      guess_number(max_number, max_attempts)
+    end
   end
 end
 
-# Pick one random card per suit
-
-player_cards = []
-deck.keys.each do |suit|
-  cards = deck[suit]
-  cards.shuffle!
-  player_cards << cards.pop
-end
-
-# Determine the score of the remaining cards in the deck
-
-sum = deck.reduce(0) do |sum, (_, remaining_cards)|
-  remaining_cards.map do |card|
-    score(card)
-  end
-
-  sum += remaining_cards.sum
-end
-
-puts sum
+guess_number(10, 3)
