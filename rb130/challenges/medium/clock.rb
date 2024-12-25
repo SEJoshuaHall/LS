@@ -1,85 +1,60 @@
-=begin
-P
-take a time and subtract minutes and rollover to previous day
+# frozen_string_literal: true
 
-E
-00:40 - 70
-23:30
-
-A
-subtract from minutes.
-if not negative, return as new minutes
-else
-divmod for subtract_hours and
-if 0, 0
-else + 60 SET minutes
-
-subtract from hours
-if not negative, return as new hours
-else
-  modulo 24
-  if 0, 0
-else + 24 SET hours
-
-=end
-
+# This class creates a Clock object which represents time in this format: "00:00".
 class Clock
-  def initialize(hours, minutes=0)
+  def initialize(hours, minutes = 0)
     @hours = hours
     @minutes = minutes
   end
 
-  def self.at(hours, minutes=0)
-    if block_given?
-      minutes = minutes + yield
-    end
+  def self.at(hours, minutes = 0)
+    minutes += yield if block_given?
     Clock.new(hours, minutes)
   end
 
-  def +(min=0)
+  def +(min = 0)
     add_hours, @minutes = (@minutes + min).divmod(60)
     @hours = (@hours + add_hours) % 24
     Clock.new(@hours, @minutes)
   end
 
-  def -(minutes)
-    minutes = @minutes - minutes
-    if minutes >= 0
-      @minutes = minutes
+  def -(other)
+    other = @minutes - other
+    if other >= 0
+      @minutes = other
     else
-      minutes = minutes - 60 #adjust hours offset for negative minutes
-      subtract_hours, minutes = (-minutes).divmod(60)
-      @minutes = 60 - minutes  unless minutes == 0
+      other -= 60 # adjust hours offset for negative minutes
+      subtract_hours, other = (-other).divmod(60)
+      @minutes = 60 - other unless other.zero?
     end
-    if subtract_hours == nil then subtract_hours = 0
-    end
+    subtract_hours(subtract_hours)
+    Clock.new(@hours, @minutes)
+  end
+
+  def subtract_hours(subtract_hours)
+    subtract_hours = 0 if subtract_hours.nil?
 
     hours = @hours - subtract_hours
     hours = hours % 24
-    if hours >= 0
-      @hours = hours
-    else
-      @hours = hours + 24
-    end
-    Clock.new(@hours, @minutes)
+    @hours = if hours >= 0
+               hours
+             else
+               hours + 24
+             end
   end
-  
+
   def to_s
-    "%02i" % [@hours] + ":" + "%02i" % [@minutes]
+    "#{format('%02i', @hours)}:#{format('%02i', @minutes)}"
   end
 
   def ==(other)
     hours == other.hours && minutes == other.minutes
   end
-  
-  private
-  
-  
+
   protected
+
   attr_reader :hours, :minutes
-  
 end
 
-my_clock = Clock.at(1)
+Clock.at(1)
 p (Clock.at(10, 30) - 5).to_s
-
