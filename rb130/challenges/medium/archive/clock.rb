@@ -55,6 +55,3 @@ class Clock
 
   attr_reader :hours, :minutes
 end
-
-Clock.at(1)
-p (Clock.at(10, 30) - 5).to_s
