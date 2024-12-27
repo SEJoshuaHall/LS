@@ -19,7 +19,7 @@ class Meetup
     first_of_month = Date.new(@year, @month, 1)
     last_of_month = Date.new(@year, @month, -1)
     qualifying = (first_of_month..last_of_month).select { |date| date.wday == weekday }
-    qualifying
+    qualifying #use map
   end
 
   def day_number(weekday)
