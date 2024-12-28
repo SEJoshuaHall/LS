@@ -9,7 +9,7 @@ class Meetup
   def day(weekday, schedule)
     weekday_dates = weekdays_of_month(weekday.downcase)
     day = select_day(weekday_dates, schedule.downcase)
-    Date.civil(@year, @month, day)
+    Date.civil(@year, @month, day) unless day.nil?
   end
 
   private
@@ -18,7 +18,7 @@ class Meetup
     weekday = day_number(weekday)
     first_of_month = Date.new(@year, @month, 1)
     last_of_month = Date.new(@year, @month, -1)
-    qualifying = (first_of_month..last_of_month).select { |date| date.wday == weekday }
+    qualifying = (first_of_month..last_of_month).select { |date| date.wday == weekday }.map { |day| day.day }
     qualifying
   end
 
@@ -47,17 +47,16 @@ class Meetup
     when 'fourth'
       then result = weekday_dates[3]
     when 'fifth'
-      then result = weekday_dates[4] if weekday_dates[4]
+      then weekday_dates[4]? result = weekday_dates[4] : nil
     when 'last'
       then result = weekday_dates.last
     when 'teenth'
-      then result = weekday_dates.select { |date| date > 12 && date < 20 }
+      then result = weekday_dates.select { |date| date > 12 && date < 20 }[0]
     end
 
     result
   end
 end
 
-meetup = Meetup.new(2015, 4)
-p Date.civil(2015, 4, 23)
-p meetup.day('Thursday', 'fourth')
+# meetup = Meetup.new(2016, 10)
+# p meetup.day('Monday', 'teenth')
