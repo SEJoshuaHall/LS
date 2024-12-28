@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'date'
 
+# Meetup creates an object with a month and year and a method to return a specific day of that month and year based on user inquiry.
 class Meetup
   def initialize(year, month)
     @year = year
@@ -18,45 +21,31 @@ class Meetup
     weekday = day_number(weekday)
     first_of_month = Date.new(@year, @month, 1)
     last_of_month = Date.new(@year, @month, -1)
-    qualifying = (first_of_month..last_of_month).select { |date| date.wday == weekday }.map { |day| day.day }
-    qualifying
+    (first_of_month..last_of_month).select { |date| date.wday == weekday }.map(&:day)
   end
 
   def day_number(weekday)
-    case weekday
-    when 'sunday' then return 0
-    when 'monday' then return 1
-    when 'tuesday' then return 2
-    when 'wednesday' then return 3
-    when 'thursday' then return 4
-    when 'friday' then return 5
-    when 'saturday' then return 6
-    end
+    lookup_days = { 'sunday' => 0, 'monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5,
+                    'saturday' => 6 }
+    lookup_days[weekday]
   end
 
   def select_day(weekday_dates, schedule)
-    result = nil
-
     case schedule
     when 'first'
-      then result = weekday_dates[0]
+      weekday_dates[0]
     when 'second'
-      then result = weekday_dates[1]
+      weekday_dates[1]
     when 'third'
-      then result = weekday_dates[2]
+      weekday_dates[2]
     when 'fourth'
-      then result = weekday_dates[3]
+      weekday_dates[3]
     when 'fifth'
-      then weekday_dates[4]? result = weekday_dates[4] : nil
+      weekday_dates[4] || nil
     when 'last'
-      then result = weekday_dates.last
+      weekday_dates.last
     when 'teenth'
-      then result = weekday_dates.select { |date| date > 12 && date < 20 }[0]
+      weekday_dates.select { |date| date > 12 && date < 20 }[0]
     end
-
-    result
   end
 end
-
-# meetup = Meetup.new(2016, 10)
-# p meetup.day('Monday', 'teenth')
