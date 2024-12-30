@@ -28,33 +28,33 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_empty_list_size
-    # skip
+    skip
     list = SimpleLinkedList.new
     assert_equal 0, list.size
   end
 
   def test_empty_list_empty
-    # skip
+    skip
     list = SimpleLinkedList.new
     assert list.empty?
   end
 
   def test_pushing_element_on_list
-    # skip
+    skip
     list = SimpleLinkedList.new
     list.push(1)
     assert_equal 1, list.size
   end
 
   def test_empty_list_1_element
-    # skip
+    skip
     list = SimpleLinkedList.new
     list.push(1)
     refute list.empty?
   end
 
   def test_peeking_at_list
-    # skip
+    skip
     list = SimpleLinkedList.new
     list.push(1)
     assert_equal 1, list.size
@@ -62,13 +62,13 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_peeking_at_empty_list
-    # skip
+    skip
     list = SimpleLinkedList.new
     assert_nil list.peek
   end
 
   def test_access_head_element
-    # skip
+    skip
     list = SimpleLinkedList.new
     list.push(1)
     assert_instance_of Element, list.head
@@ -77,7 +77,7 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_items_are_stacked
-    # skip
+    skip
     list = SimpleLinkedList.new
     list.push(1)
     list.push(2)
@@ -87,7 +87,7 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_push_10_items
-    # skip
+    skip
     list = SimpleLinkedList.new
     (1..10).each do |datum|
       list.push(datum)
@@ -97,7 +97,7 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_pop_1_item
-    # skip
+    skip
     list = SimpleLinkedList.new
     list.push(1)
     assert_equal 1, list.pop
@@ -105,7 +105,7 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_popping_frenzy
-    # skip
+    skip
     list = SimpleLinkedList.new
     (1..10).each do |datum|
       list.push(datum)
@@ -116,21 +116,21 @@ class LinkedListTest < Minitest::Test
   end
 
   def test_from_a_empty_array
-    # skip
+    skip
     list = SimpleLinkedList.from_a([])
     assert_equal 0, list.size
     assert_nil list.peek
   end
 
   def test_from_a_nil
-    # skip
+    skip
     list = SimpleLinkedList.from_a(nil)
     assert_equal 0, list.size
     assert_nil list.peek
   end
 
   def test_from_a_2_element_array
-    # skip
+    skip
     list = SimpleLinkedList.from_a([1, 2])
     assert_equal 2, list.size
     assert_equal 1, list.peek
